@@ -13,12 +13,12 @@ public partial class EnemySpawnSystem : SystemBase
     protected override void OnStartRunning()
     {
         base.OnStartRunning();
-        _entityCommandBuffer = World.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
     }
 
     protected override void OnUpdate()
     {
         _enemyDatas = SystemAPI.GetSingletonBuffer<EnemySpawnerData>();
+        _entityCommandBuffer = World.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
 
         for (int i = 0; i < _enemyDatas.Length; i++)
         {
