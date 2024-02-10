@@ -173,15 +173,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4314881515121145097, guid: e43c343576b973d469fe29a6afff11f6, type: 3}
       propertyPath: EnemySpawnerDatas.Array.data[0].MaxAmountSpawned
-      value: 10
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 4314881515121145097, guid: e43c343576b973d469fe29a6afff11f6, type: 3}
       propertyPath: EnemySpawnerDatas.Array.data[1].MaxAmountSpawned
-      value: 10
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 4314881515121145097, guid: e43c343576b973d469fe29a6afff11f6, type: 3}
       propertyPath: EnemySpawnerDatas.Array.data[2].MaxAmountSpawned
-      value: 10
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 5693210226673118449, guid: e43c343576b973d469fe29a6afff11f6, type: 3}
       propertyPath: m_Name

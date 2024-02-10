@@ -13,12 +13,20 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        _connectedPlayerEntity = _entityManager.CreateEntity();
+
+        _connectedPlayerEntity = _entityManager.CreateSingleton<PlayerTagComponent>();
 
         _entityManager.AddComponent<PlayerTagComponent>(_connectedPlayerEntity);
+        _entityManager.AddComponentObject(_connectedPlayerEntity, gameObject);
         _entityManager.SetComponentData(_connectedPlayerEntity, new PlayerTagComponent
         {
             PlayerController = this,
+        });
+
+        _entityManager.AddComponent<PlayerMovementConfigComponent>(_connectedPlayerEntity);
+        _entityManager.SetComponentData(_connectedPlayerEntity, new PlayerMovementConfigComponent
+        {
+            Speed = 15,
         });
 
         _entityManager.AddComponent<LocalTransform>(_connectedPlayerEntity);
@@ -29,9 +37,9 @@ public class PlayerController : MonoBehaviour
 #endif
     }
 
-    private void LateUpdate()
-    {
-        LocalTransform localTransform = _entityManager.GetComponentData<LocalTransform>(_connectedPlayerEntity);
-        transform.position = localTransform.Position;
-    }
+    // private void LateUpdate()
+    // {
+    //     LocalTransform localTransform = _entityManager.GetComponentData<LocalTransform>(_connectedPlayerEntity);
+    //     transform.position = localTransform.Position;
+    // }
 }
