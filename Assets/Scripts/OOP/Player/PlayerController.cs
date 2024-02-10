@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour
         _connectedPlayerEntity = _entityManager.CreateSingleton<PlayerTagComponent>();
 
         _entityManager.AddComponent<PlayerTagComponent>(_connectedPlayerEntity);
-        _entityManager.AddComponentObject(_connectedPlayerEntity, gameObject);
         _entityManager.SetComponentData(_connectedPlayerEntity, new PlayerTagComponent
         {
             PlayerController = this,
