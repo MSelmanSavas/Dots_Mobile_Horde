@@ -16,6 +16,11 @@ public class PlayerController : MonoBehaviour
         _connectedPlayerEntity = _entityManager.CreateEntity();
 
         _entityManager.AddComponent<PlayerTagComponent>(_connectedPlayerEntity);
+        _entityManager.SetComponentData(_connectedPlayerEntity, new PlayerTagComponent
+        {
+            PlayerController = this,
+        });
+
         _entityManager.AddComponent<LocalTransform>(_connectedPlayerEntity);
         _entityManager.AddComponent<LocalToWorld>(_connectedPlayerEntity);
 

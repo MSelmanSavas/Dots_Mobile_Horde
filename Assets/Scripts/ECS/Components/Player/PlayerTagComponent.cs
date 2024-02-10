@@ -1,6 +1,7 @@
 using Unity.Entities;
+using UnityEngine;
 
-public struct PlayerTagComponent : IComponentData
+public class PlayerTagComponent : IComponentData
 {
-
+    public PlayerController PlayerController;
 }
