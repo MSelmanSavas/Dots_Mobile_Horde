@@ -21,6 +21,7 @@ public partial class EnemyDestroySystem : SystemBase
 
     protected override void OnUpdate()
     {
+        return;
         if (!TryCheckCooldown(SystemAPI.Time.DeltaTime))
             return;
 

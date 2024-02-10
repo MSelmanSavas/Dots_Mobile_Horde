@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 0
   spriteMeshType: 0
   alignment: 0
@@ -121,7 +121,343 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: fly_sprite_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 297
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e24103f9b877dc647a076666cb02358a
+      internalID: -1221511110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fly_sprite_1
+      rect:
+        serializedVersion: 2
+        x: 297
+        y: 0
+        width: 297
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ee78c0405380d8488db4cfa17bf5871
+      internalID: 1220120512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fly_sprite_2
+      rect:
+        serializedVersion: 2
+        x: 594
+        y: 0
+        width: 297
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8067103693b1e014591047ad967cd6d5
+      internalID: 414608385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fly_sprite_3
+      rect:
+        serializedVersion: 2
+        x: 891
+        y: 0
+        width: 297
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 870daf4befc29b84c8372c4aa2821279
+      internalID: 2103642512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fly_sprite_4
+      rect:
+        serializedVersion: 2
+        x: 1188
+        y: 0
+        width: 297
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 229ee65f2bcc2f849be0d3f834b1c02c
+      internalID: 857141342
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fly_sprite_5
+      rect:
+        serializedVersion: 2
+        x: 1485
+        y: 0
+        width: 297
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0c5b8da748cf1f4587cea26965f150d
+      internalID: -990995682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fly_sprite_6
+      rect:
+        serializedVersion: 2
+        x: 1782
+        y: 0
+        width: 297
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0c41728791f3404182621078a79b178
+      internalID: 1351229133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fly_sprite_7
+      rect:
+        serializedVersion: 2
+        x: 2079
+        y: 0
+        width: 297
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef3c6367e1aea644ab2fcd0c3cceb8ac
+      internalID: -1591592839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fly_sprite_8
+      rect:
+        serializedVersion: 2
+        x: 2376
+        y: 0
+        width: 297
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b190360e09289d42a17d08119f8d4db
+      internalID: -1110471963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fly_sprite_9
+      rect:
+        serializedVersion: 2
+        x: 2673
+        y: 0
+        width: 297
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ff06c9ff8c24bf4899302bcae32bff0
+      internalID: -1496314655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fly_sprite_10
+      rect:
+        serializedVersion: 2
+        x: 2970
+        y: 0
+        width: 297
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 525d95c4f614d9b4c981adced0175454
+      internalID: -1293386705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fly_sprite_11
+      rect:
+        serializedVersion: 2
+        x: 3267
+        y: 0
+        width: 297
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6fc9468b8525444689d4b5a1e74b6eb
+      internalID: -350192056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fly_sprite_12
+      rect:
+        serializedVersion: 2
+        x: 3564
+        y: 0
+        width: 297
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe8c67e1b34fc9445b5b822dcc84def3
+      internalID: 1979052261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fly_sprite_13
+      rect:
+        serializedVersion: 2
+        x: 3861
+        y: 0
+        width: 297
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d1b17c96b0ecaf449cb51a9a8bc939f
+      internalID: 397821647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fly_sprite_14
+      rect:
+        serializedVersion: 2
+        x: 4158
+        y: 0
+        width: 297
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e5c35cfe2ecfe842a736d03a97d3420
+      internalID: 583162144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fly_sprite_15
+      rect:
+        serializedVersion: 2
+        x: 4455
+        y: 0
+        width: 297
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83110d55c09d5c345bbc8c58a17826db
+      internalID: -654992601
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -132,7 +468,23 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      fly_sprite_0: -1221511110
+      fly_sprite_1: 1220120512
+      fly_sprite_10: -1293386705
+      fly_sprite_11: -350192056
+      fly_sprite_12: 1979052261
+      fly_sprite_13: 397821647
+      fly_sprite_14: 583162144
+      fly_sprite_15: -654992601
+      fly_sprite_2: 414608385
+      fly_sprite_3: 2103642512
+      fly_sprite_4: 857141342
+      fly_sprite_5: -990995682
+      fly_sprite_6: 1351229133
+      fly_sprite_7: -1591592839
+      fly_sprite_8: -1110471963
+      fly_sprite_9: -1496314655
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
