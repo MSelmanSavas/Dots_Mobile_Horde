@@ -4,6 +4,7 @@ using Unity.Entities;
 using UnityEngine;
 using Unity.Mathematics;
 
+[UpdateAfter(typeof(LateSimulationSystemGroup))]
 public partial class EnemyDestroySystem : SystemBase
 {
     EntityCommandBuffer _entityCommandBuffer;
@@ -15,8 +16,8 @@ public partial class EnemyDestroySystem : SystemBase
     protected override void OnStartRunning()
     {
         base.OnStartRunning();
-        _entityCommandBuffer = World.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
         _random = new Unity.Mathematics.Random(10000);
+        _currentWaitTime = _maxWaitTime;
     }
 
     protected override void OnUpdate()
@@ -33,12 +34,8 @@ public partial class EnemyDestroySystem : SystemBase
             if (currentAmount >= randomAmount)
                 return;
 
-            int randomCheckAmount = _random.NextInt(10);
-
-            if (randomCheckAmount <= 50)
-                return;
-
             EntityManager.DestroyEntity(entity);
+            currentAmount++;
 
         }).WithoutBurst().WithStructuralChanges().Run();
     }
