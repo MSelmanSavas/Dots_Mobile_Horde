@@ -17,7 +17,7 @@ public partial class EnemyMovementToPlayerSystem : SystemBase
         UnityEngine.Profiling.Profiler.EndSample();
 
         float deltaTime = SystemAPI.Time.DeltaTime;
-        float enemySpeed = 5f;
+        float enemySpeed = 2f;
 
         UnityEngine.Profiling.Profiler.BeginSample("Physics Test 2");
 

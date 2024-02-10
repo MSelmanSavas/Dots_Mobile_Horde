@@ -17,7 +17,8 @@ public class PlayerController : MonoBehaviour
         _connectedPlayerEntity = _entityManager.CreateSingleton<PlayerTagComponent>();
 
         _entityManager.AddComponent<PlayerTagComponent>(_connectedPlayerEntity);
-        _entityManager.SetComponentData(_connectedPlayerEntity, new PlayerTagComponent
+        _entityManager.AddComponent<PlayerControllerComponent>(_connectedPlayerEntity);
+        _entityManager.SetComponentData(_connectedPlayerEntity, new PlayerControllerComponent
         {
             PlayerController = this,
         });
@@ -35,10 +36,4 @@ public class PlayerController : MonoBehaviour
         _entityManager.SetName(_connectedPlayerEntity, "Player");
 #endif
     }
-
-    // private void LateUpdate()
-    // {
-    //     LocalTransform localTransform = _entityManager.GetComponentData<LocalTransform>(_connectedPlayerEntity);
-    //     transform.position = localTransform.Position;
-    // }
 }

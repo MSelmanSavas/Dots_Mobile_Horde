@@ -123,6 +123,52 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &591265951
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 591265952}
+  - component: {fileID: 591265953}
+  m_Layer: 0
+  m_Name: BulletConfigsAuthoring
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &591265952
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591265951}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -25.48317, y: -24.823072, z: -10.314621}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &591265953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591265951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 002b7662ff5aca945a3195cc7d041f09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bulletPrefab: {fileID: 1839986426013252320, guid: 5f3e770442e1c2343a133afcd9633576, type: 3}
+  _rocketPrefab: {fileID: 2754701798193958125, guid: a7392497b1692ab48b171e7f211d3b9b, type: 3}
 --- !u!1 &666547777
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,7 +203,7 @@ MonoBehaviour:
     x: -0
     y: -9.81
     z: -0
-  m_SolverIterationCount: 8
+  m_SolverIterationCount: 16
   m_EnableSolverStabilizationHeuristic: 0
   m_MultiThreaded: 1
   m_SynchronizeCollisionWorld: 0
@@ -225,6 +271,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4314881515121145097, guid: e43c343576b973d469fe29a6afff11f6, type: 3}
+      propertyPath: EnemySpawnerDatas.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4314881515121145097, guid: e43c343576b973d469fe29a6afff11f6, type: 3}
       propertyPath: EnemySpawnerDatas.Array.data[0].MaxAmountSpawned
       value: 250
       objectReference: {fileID: 0}
@@ -249,5 +299,6 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 591265952}
   - {fileID: 7140762424457970677}
   - {fileID: 666547779}

@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Entities;
 using Unity.Transforms;
 using Unity.Mathematics;
+using Unity.Physics;
 
 
 public partial class EnemySpawnSystem : SystemBase
@@ -13,7 +14,6 @@ public partial class EnemySpawnSystem : SystemBase
     protected override void OnStartRunning()
     {
         base.OnStartRunning();
-        //_entityCommandBuffer = World.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
     }
 
     protected override void OnUpdate()
@@ -30,11 +30,10 @@ public partial class EnemySpawnSystem : SystemBase
 
             var createdEntity = _entityCommandBuffer.Instantiate(data.Prefab);
 
-            float3 randomPosition = UnityEngine.Random.insideUnitSphere * 15;
+            float3 randomPosition = UnityEngine.Random.insideUnitSphere.normalized * 15;
             randomPosition.z = 0;
 
-
-            _entityCommandBuffer.SetComponent<LocalTransform>(createdEntity, new LocalTransform
+            _entityCommandBuffer.SetComponent(createdEntity, new LocalTransform
             {
                 Position = randomPosition,
                 Rotation = Quaternion.identity,
