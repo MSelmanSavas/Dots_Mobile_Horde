@@ -23,13 +23,13 @@ public class EnemySpawnerSystemConfigAuthoring : MonoBehaviour
         public override void Bake(EnemySpawnerSystemConfigAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.None);
-            var buffer = AddBuffer<EnemySpawnerData>(entity).Reinterpret<EnemySpawnerData>();
+            var buffer = AddBuffer<EnemySpawnerDataComponent>(entity).Reinterpret<EnemySpawnerDataComponent>();
 
             for (int i = 0; i < authoring.EnemySpawnerDatas.Count; i++)
             {
                 var prefabEntity = GetEntity(authoring.EnemySpawnerDatas[i].Prefab, TransformUsageFlags.Dynamic);
 
-                buffer.Add(new EnemySpawnerData
+                buffer.Add(new EnemySpawnerDataComponent
                 {
                     Prefab = prefabEntity,
                     CurrentAmountSpawned = authoring.EnemySpawnerDatas[i].CurrentAmountSpawned,

@@ -1,6 +1,7 @@
 using Unity.Entities;
 using UnityEngine;
 
-public class PlayerTagComponent : IComponentData
+public struct PlayerTagComponent : IComponentData
 {
+    public int DummyData;
 }

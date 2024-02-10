@@ -3,41 +3,47 @@ using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 using Unity.Mathematics;
+using Unity.Burst;
 
-[UpdateAfter(typeof(LateSimulationSystemGroup))]
-public partial class EnemyDestroySystem : SystemBase
+[BurstCompile]
+public partial struct EnemyDestroySystem : ISystem
 {
     EntityCommandBuffer _entityCommandBuffer;
 
-    float _maxWaitTime = 2f;
-    float _currentWaitTime = 0f;
+    float _maxWaitTime;
+    float _currentWaitTime;
     Unity.Mathematics.Random _random;
 
-    protected override void OnStartRunning()
+    [BurstCompile]
+    public void OnCreate(ref SystemState systemState)
     {
-        base.OnStartRunning();
         _random = new Unity.Mathematics.Random(10000);
+        _maxWaitTime = 1f;
         _currentWaitTime = _maxWaitTime;
     }
 
-    protected override void OnUpdate()
+    [BurstCompile]
+    public void OnUpdate(ref SystemState systemState)
     {
         return;
+        
         if (!TryCheckCooldown(SystemAPI.Time.DeltaTime))
             return;
 
-        int randomAmount = _random.NextInt(0, 100);
+        EntityCommandBuffer.ParallelWriter entityCommandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(systemState.WorldUnmanaged).AsParallelWriter();
+
+        //int randomAmount = _random.NextInt(0, 100);
+        int randomAmount = 20;
         int currentAmount = 0;
 
-        Entities.ForEach((Entity entity) =>
+        foreach (var (enemyTagComponent, enemyEntity) in SystemAPI.Query<EnemyTagComponent>().WithEntityAccess())
         {
             if (currentAmount >= randomAmount)
                 return;
 
-            EntityManager.DestroyEntity(entity);
+            entityCommandBuffer.DestroyEntity(enemyEntity.Index, enemyEntity);
             currentAmount++;
-
-        }).WithoutBurst().WithStructuralChanges().Run();
+        }
     }
 
     private bool TryCheckCooldown(float deltaTime)

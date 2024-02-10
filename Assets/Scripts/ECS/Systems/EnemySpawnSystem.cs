@@ -9,7 +9,7 @@ public partial class EnemySpawnSystem : SystemBase
 {
     EntityCommandBuffer _entityCommandBuffer;
     Entity _enemyEntity;
-    DynamicBuffer<EnemySpawnerData> _enemyDatas;
+    DynamicBuffer<EnemySpawnerDataComponent> _enemyDatas;
 
     protected override void OnStartRunning()
     {
@@ -18,9 +18,10 @@ public partial class EnemySpawnSystem : SystemBase
 
     protected override void OnUpdate()
     {
-        _enemyDatas = SystemAPI.GetSingletonBuffer<EnemySpawnerData>();
+        _enemyDatas = SystemAPI.GetSingletonBuffer<EnemySpawnerDataComponent>();
         _entityCommandBuffer = World.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
 
+        
         for (int i = 0; i < _enemyDatas.Length; i++)
         {
             var data = _enemyDatas[i];
@@ -44,6 +45,5 @@ public partial class EnemySpawnSystem : SystemBase
 
             _enemyDatas[i] = data;
         }
-
     }
 }

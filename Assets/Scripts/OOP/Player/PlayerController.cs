@@ -31,6 +31,14 @@ public class PlayerController : MonoBehaviour
 
         _entityManager.AddComponent<LocalTransform>(_connectedPlayerEntity);
         _entityManager.AddComponent<LocalToWorld>(_connectedPlayerEntity);
+        
+        _entityManager.AddComponent<EntityComponent_Health>(_connectedPlayerEntity);
+        _entityManager.SetComponentData(_connectedPlayerEntity, new EntityComponent_Health
+        {
+            CurrentHealth = 100,
+            MaxHealth = 100,
+            IsDead = false,
+        });
 
 #if UNITY_EDITOR
         _entityManager.SetName(_connectedPlayerEntity, "Player");
