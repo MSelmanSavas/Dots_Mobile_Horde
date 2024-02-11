@@ -8,16 +8,17 @@ using UnityEngine;
 
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 [UpdateAfter(typeof(PhysicsSystemGroup))]
+[BurstCompile]
 public partial struct BulletTriggerSystem : ISystem
 {
-    //[BurstCompile]
+    [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<EnemyTagComponent>();
         state.RequireForUpdate<SimulationSingleton>();
     }
 
-    //[BurstCompile]
+    [BurstCompile]
     public void OnUpdate(ref SystemState systemState)
     {
         systemState.Dependency = new BulletTriggerJob
@@ -30,7 +31,7 @@ public partial struct BulletTriggerSystem : ISystem
     }
 
 
-    //[BurstCompile]
+    [BurstCompile]
     struct BulletTriggerJob : ITriggerEventsJob
     {
         public ComponentLookup<EnemyTagComponent> EnemyGroup;

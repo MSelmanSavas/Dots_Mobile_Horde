@@ -47,10 +47,7 @@ MonoBehaviour:
   EnemySpawnerDatas:
   - Prefab: {fileID: 3727623857469886736, guid: fc10b7c9ed4e69846a91c5b1954881cd, type: 3}
     CurrentAmountSpawned: 0
-    MaxAmountSpawned: 20
+    MaxAmountSpawned: 250
   - Prefab: {fileID: 3727623857469886736, guid: dcb4447a3e963a641af4555e99692ae6, type: 3}
     CurrentAmountSpawned: 0
-    MaxAmountSpawned: 15
-  - Prefab: {fileID: 3727623857469886736, guid: 84926243ccd3bdb4bb234b65e65e58be, type: 3}
-    CurrentAmountSpawned: 0
-    MaxAmountSpawned: 5
+    MaxAmountSpawned: 250
