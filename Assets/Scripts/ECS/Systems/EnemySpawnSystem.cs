@@ -2,20 +2,23 @@ using UnityEngine;
 using Unity.Entities;
 using Unity.Transforms;
 using Unity.Mathematics;
-using Unity.Physics;
-using Unity.Collections;
 
 
+[UpdateAfter(typeof(PlayerMovementSyncEntitySystem))]
 public partial class EnemySpawnSystem : SystemBase
 {
     EntityCommandBuffer _entityCommandBuffer;
     DynamicBuffer<EnemySpawnerDataComponent> _enemyDatas;
 
-
     protected override void OnUpdate()
     {
         if (!SystemAPI.TryGetSingletonBuffer(out _enemyDatas))
             return;
+
+        if (!SystemAPI.TryGetSingletonEntity<PlayerTagComponent>(out Entity playerEntity))
+            return;
+
+        PlayerAspect playerAspect = EntityManager.GetAspect<PlayerAspect>(playerEntity);
 
         _entityCommandBuffer = World.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
 
@@ -30,6 +33,8 @@ public partial class EnemySpawnSystem : SystemBase
 
             float3 randomPosition = UnityEngine.Random.insideUnitSphere.normalized * 15;
             randomPosition.z = 0;
+
+            randomPosition += playerAspect.PlayerTransform.ValueRO.Position;
 
             _entityCommandBuffer.SetComponent(createdEntity, new LocalTransform
             {
