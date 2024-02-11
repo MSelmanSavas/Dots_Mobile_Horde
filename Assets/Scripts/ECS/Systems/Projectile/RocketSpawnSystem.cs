@@ -21,7 +21,7 @@ public partial struct RocketSpawnSystem : ISystem
     {
         if (!SystemAPI.TryGetSingleton(out RocketSpawnDataComponent rocketSpawnDataComponent))
             return;
-
+        
         if (!SystemAPI.TryGetSingletonEntity<PlayerTagComponent>(out Entity playerEntity))
             return;
 
