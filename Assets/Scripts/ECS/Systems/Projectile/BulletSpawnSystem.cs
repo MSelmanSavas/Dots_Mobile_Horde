@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Physics;
 using Unity.Transforms;
@@ -21,10 +19,12 @@ public partial struct BulletSpawnSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        if (!SystemAPI.TryGetSingleton(out BulletSpawnDataComponent bulletSpawnData))
+        if (!SystemAPI.TryGetSingleton(out BulletSpawnDataComponent bulletSpawnDataComponent))
             return;
 
-        var playerEntity = SystemAPI.GetSingletonEntity<PlayerTagComponent>();
+        if (!SystemAPI.TryGetSingletonEntity<PlayerTagComponent>(out Entity playerEntity))
+            return;
+
         var playerLocalTransform = state.EntityManager.GetComponentData<LocalTransform>(playerEntity);
 
         EntityCommandBuffer entityCommandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
@@ -36,7 +36,7 @@ public partial struct BulletSpawnSystem : ISystem
             float3 normalized = math.normalizesafe(randomLinear);
 
 
-            var createdEntity = entityCommandBuffer.Instantiate(bulletSpawnData.Prefab);
+            var createdEntity = entityCommandBuffer.Instantiate(bulletSpawnDataComponent.Prefab);
 
             entityCommandBuffer.SetComponent(createdEntity, new LocalTransform
             {
