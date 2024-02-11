@@ -21,7 +21,9 @@ public partial struct BulletSpawnSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        var bulletSpawnData = SystemAPI.GetSingleton<BulletSpawnDataComponent>();
+        if (!SystemAPI.TryGetSingleton(out BulletSpawnDataComponent bulletSpawnData))
+            return;
+
         var playerEntity = SystemAPI.GetSingletonEntity<PlayerTagComponent>();
         var playerLocalTransform = state.EntityManager.GetComponentData<LocalTransform>(playerEntity);
 

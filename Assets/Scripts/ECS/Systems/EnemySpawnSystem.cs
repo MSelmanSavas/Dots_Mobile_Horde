@@ -9,13 +9,14 @@ using Unity.Collections;
 public partial class EnemySpawnSystem : SystemBase
 {
     EntityCommandBuffer _entityCommandBuffer;
-    Entity _enemyEntity;
     DynamicBuffer<EnemySpawnerDataComponent> _enemyDatas;
 
 
     protected override void OnUpdate()
     {
-        _enemyDatas = SystemAPI.GetSingletonBuffer<EnemySpawnerDataComponent>();
+        if (!SystemAPI.TryGetSingletonBuffer(out _enemyDatas))
+            return;
+
         _entityCommandBuffer = World.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
 
         for (int i = 0; i < _enemyDatas.Length; i++)

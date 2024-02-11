@@ -10,7 +10,8 @@ public partial class EnemyDestroySystem : SystemBase
 {
     protected override void OnUpdate()
     {
-        DynamicBuffer<EnemySpawnerDataComponent> enemySpawnDatas = SystemAPI.GetSingletonBuffer<EnemySpawnerDataComponent>();
+        if (!SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<EnemySpawnerDataComponent> enemySpawnDatas, false))
+            return;
 
         EntityCommandBuffer entityCommandBuffer = World.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
 

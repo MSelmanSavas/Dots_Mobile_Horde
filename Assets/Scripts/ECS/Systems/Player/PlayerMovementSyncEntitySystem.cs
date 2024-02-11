@@ -8,6 +8,17 @@ using UnityEngine;
 
 public partial class PlayerMovementSyncEntitySystem : SystemBase
 {
+    Vector2 _screenCenterPos;
+
+    protected override void OnCreate()
+    {
+        base.OnCreate();
+        _screenCenterPos = new()
+        {
+            x = Screen.width / 2f,
+            y = Screen.height / 2f,
+        };
+    }
     protected override void OnUpdate()
     {
         Entities.WithAll<PlayerAspect>().ForEach((PlayerAspect playerAspect, PlayerControllerComponent playerController) =>
@@ -43,7 +54,7 @@ public partial class PlayerMovementSyncEntitySystem : SystemBase
             return float3.zero;
 
         Vector2 touchPosition = Input.touches[0].position;
-        Vector2 deltaPosition = touchPosition - Vector2.zero;
+        Vector2 deltaPosition = touchPosition - _screenCenterPos;
         float3 movementVector = new float3();
 
         movementVector.z = 0;
