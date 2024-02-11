@@ -18,14 +18,14 @@ public partial class EnemyMovementToPlayerSystem : SystemBase
         float enemySpeed = 2f;
 
 
-        Entities.WithAll<EnemyTagComponent>().ForEach((Entity entity, ref LocalTransform localTransform, ref PhysicsVelocity physicsVelocity, ref PhysicsMass physicsMass) =>
+        Entities.WithAll<EnemyTagComponent>().ForEach((ref LocalTransform localTransform, ref PhysicsVelocity physicsVelocity, ref PhysicsMass physicsMass) =>
         {
             float3 enemyPosition = localTransform.Position;
             float3 enemyToPlayerVector = playerPosition - enemyPosition;
             physicsVelocity.ApplyLinearImpulse(physicsMass, enemyToPlayerVector * enemySpeed * deltaTime);
             Vector3 linearVelocity = physicsVelocity.Linear;
             float velocityScale = linearVelocity.magnitude;
-            float clampedVelocityMagnitude = Mathf.Clamp(velocityScale, 0f, 10f);
+            float clampedVelocityMagnitude = Mathf.Clamp(velocityScale, 0f, enemySpeed);
             physicsVelocity.Linear = linearVelocity.normalized * clampedVelocityMagnitude;
             physicsVelocity.Angular = 0f;
             physicsMass.InverseInertia = float3.zero;
