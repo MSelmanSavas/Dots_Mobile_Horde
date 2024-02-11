@@ -175,10 +175,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: BulletConfigsAuthoring
       objectReference: {fileID: 0}
-    - target: {fileID: 5059364263626673480, guid: a3d7e9c5700d5e24d9c9c2d7a79a298c, type: 3}
-      propertyPath: _lavaPrefab
-      value: 
-      objectReference: {fileID: 2118215117141689274, guid: e63f652f4105e58459945958c6e673cd, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -9,9 +9,21 @@ public partial class EnemySpawnSystem : SystemBase
 {
     EntityCommandBuffer _entityCommandBuffer;
     DynamicBuffer<EnemySpawnerDataComponent> _enemyDatas;
+    float _currentWaitTime;
+    float _maxWaitTime;
 
+    protected override void OnCreate()
+    {
+        base.OnCreate();
+        _maxWaitTime = 0.25f;
+        _currentWaitTime = _maxWaitTime;
+    }
+    
     protected override void OnUpdate()
     {
+        if (!TryCheckCooldown(SystemAPI.Time.DeltaTime))
+            return;
+
         if (!SystemAPI.TryGetSingletonBuffer(out _enemyDatas))
             return;
 
@@ -52,5 +64,17 @@ public partial class EnemySpawnSystem : SystemBase
 
             _enemyDatas[i] = data;
         }
+    }
+
+    bool TryCheckCooldown(float deltaTime)
+    {
+        if (_currentWaitTime > 0f)
+        {
+            _currentWaitTime -= deltaTime;
+            return false;
+        }
+
+        _currentWaitTime = _maxWaitTime;
+        return true;
     }
 }

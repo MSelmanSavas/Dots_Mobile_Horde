@@ -2,6 +2,7 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Physics;
 using Unity.Physics.Systems;
+using Unity.Transforms;
 
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 [UpdateAfter(typeof(PhysicsSystemGroup))]
@@ -18,12 +19,16 @@ public partial struct RocketTriggerSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState systemState)
     {
+        if (!SystemAPI.TryGetSingleton(out LavaSpawnDataComponent lavaSpawnDataComponent))
+            return;
+
         systemState.Dependency = new RocketTriggerJob
         {
             EnemyGroup = SystemAPI.GetComponentLookup<EnemyTagComponent>(),
-            EnemyHealthGroup = SystemAPI.GetComponentLookup<EntityComponent_Health>(),
             RocketGroup = SystemAPI.GetComponentLookup<RocketTagComponent>(),
+            RocketTransformGroup = SystemAPI.GetComponentLookup<LocalTransform>(),
             ECBParallel = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(systemState.WorldUnmanaged).AsParallelWriter(),
+            LavaSpawnData = lavaSpawnDataComponent,
         }.Schedule(SystemAPI.GetSingleton<SimulationSingleton>(), systemState.Dependency);
     }
 
@@ -32,9 +37,10 @@ public partial struct RocketTriggerSystem : ISystem
     struct RocketTriggerJob : ITriggerEventsJob
     {
         public ComponentLookup<EnemyTagComponent> EnemyGroup;
-        public ComponentLookup<EntityComponent_Health> EnemyHealthGroup;
         public ComponentLookup<RocketTagComponent> RocketGroup;
+        public ComponentLookup<LocalTransform> RocketTransformGroup;
         public EntityCommandBuffer.ParallelWriter ECBParallel;
+        public LavaSpawnDataComponent LavaSpawnData;
 
         public void Execute(TriggerEvent triggerEvent)
         {
@@ -59,15 +65,20 @@ public partial struct RocketTriggerSystem : ISystem
             if (!isBodyAEnemy && !isBodyBEnemy)
                 return;
 
-            var RocketEntity = isBodyARocket ? entityA : entityB;
-            var enemyEntity = isBodyAEnemy ? entityA : entityB;
+            var rocketEntity = isBodyARocket ? entityA : entityB;
 
-            var enemyHealthComponent = EnemyHealthGroup[enemyEntity];
+            var rocketTransform = RocketTransformGroup[rocketEntity];
 
-            enemyHealthComponent.ChangeHealth(-50);
-            EnemyHealthGroup[enemyEntity] = enemyHealthComponent;
+            var lavaEntity = ECBParallel.Instantiate(rocketEntity.Index, LavaSpawnData.Prefab);
 
-            ECBParallel.DestroyEntity(RocketEntity.Index, RocketEntity);
+            ECBParallel.SetComponent(rocketEntity.Index, lavaEntity, new LocalTransform
+            {
+                Position = rocketTransform.Position,
+                Rotation = Unity.Mathematics.quaternion.identity,
+                Scale = 1f,
+            });
+
+            ECBParallel.DestroyEntity(rocketEntity.Index, rocketEntity);
         }
     }
 }

@@ -9,16 +9,23 @@ using Unity.Burst;
 public partial struct BulletSpawnSystem : ISystem
 {
     Unity.Mathematics.Random _random;
+    float _currentWaitTime;
+    float _maxWaitTime;
 
     [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
         _random = new Unity.Mathematics.Random(15000);
+        _maxWaitTime = 2f;
+        _currentWaitTime = _maxWaitTime;
     }
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
+        if (!TryCheckCooldown(SystemAPI.Time.DeltaTime))
+            return;
+
         if (!SystemAPI.TryGetSingleton(out BulletSpawnDataComponent bulletSpawnDataComponent))
             return;
 
@@ -51,5 +58,17 @@ public partial struct BulletSpawnSystem : ISystem
                 Angular = 0f,
             });
         }
+    }
+
+    bool TryCheckCooldown(float deltaTime)
+    {
+        if (_currentWaitTime > 0f)
+        {
+            _currentWaitTime -= deltaTime;
+            return false;
+        }
+
+        _currentWaitTime = _maxWaitTime;
+        return true;
     }
 }
