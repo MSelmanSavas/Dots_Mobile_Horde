@@ -36,28 +36,25 @@ public partial struct BulletSpawnSystem : ISystem
 
         EntityCommandBuffer entityCommandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
 
-        for (int i = 0; i < 2; i++)
+        float3 randomLinear = _random.NextFloat3Direction();
+        randomLinear.z = 0;
+        float3 normalized = math.normalizesafe(randomLinear);
+
+
+        var createdEntity = entityCommandBuffer.Instantiate(bulletSpawnDataComponent.Prefab);
+
+        entityCommandBuffer.SetComponent(createdEntity, new LocalTransform
         {
-            float3 randomLinear = _random.NextFloat3Direction();
-            randomLinear.z = 0;
-            float3 normalized = math.normalizesafe(randomLinear);
+            Position = playerLocalTransform.Position,
+            Rotation = Quaternion.identity,
+            Scale = 1f,
+        });
 
-
-            var createdEntity = entityCommandBuffer.Instantiate(bulletSpawnDataComponent.Prefab);
-
-            entityCommandBuffer.SetComponent(createdEntity, new LocalTransform
-            {
-                Position = playerLocalTransform.Position,
-                Rotation = Quaternion.identity,
-                Scale = 1f,
-            });
-
-            entityCommandBuffer.SetComponent(createdEntity, new PhysicsVelocity
-            {
-                Linear = normalized * 2f,
-                Angular = 0f,
-            });
-        }
+        entityCommandBuffer.SetComponent(createdEntity, new PhysicsVelocity
+        {
+            Linear = normalized * 2f,
+            Angular = 0f,
+        });
     }
 
     bool TryCheckCooldown(float deltaTime)

@@ -18,7 +18,7 @@ public partial class EnemySpawnSystem : SystemBase
         _maxWaitTime = 0.25f;
         _currentWaitTime = _maxWaitTime;
     }
-    
+
     protected override void OnUpdate()
     {
         if (!TryCheckCooldown(SystemAPI.Time.DeltaTime))
@@ -43,8 +43,9 @@ public partial class EnemySpawnSystem : SystemBase
 
             var createdEntity = _entityCommandBuffer.Instantiate(data.Prefab);
 
-            float3 randomPosition = UnityEngine.Random.insideUnitSphere.normalized * 30;
+            float3 randomPosition = UnityEngine.Random.insideUnitSphere;
             randomPosition.z = 0;
+            randomPosition = math.normalizesafe(randomPosition) * 30;
 
             randomPosition += playerAspect.PlayerTransform.ValueRO.Position;
 
