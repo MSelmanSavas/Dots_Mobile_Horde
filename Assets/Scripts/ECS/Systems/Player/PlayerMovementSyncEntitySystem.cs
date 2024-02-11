@@ -23,34 +23,57 @@ public partial class PlayerMovementSyncEntitySystem : SystemBase
     {
         Entities.WithAll<PlayerAspect>().ForEach((PlayerAspect playerAspect, PlayerControllerComponent playerController) =>
         {
-            float3 inputVector = GetPlayerInput();
+            bool isMoving = GetPlayerInput(out float3 inputVector);
+
+            if (!isMoving)
+            {
+                playerAspect.PlayerMovement.ValueRW.IsMoving = false;
+                playerAspect.PlayerMovement.ValueRW.MovementVector = float3.zero;
+                return;
+            }
+
+            playerAspect.PlayerMovement.ValueRW.IsMoving = true;
+            playerAspect.PlayerMovement.ValueRW.MovementVector = inputVector;
             playerAspect.PlayerTransform.ValueRW.Position = playerAspect.PlayerTransform.ValueRW.Position + (playerAspect.PlayerMovementConfig.ValueRO.Speed * inputVector * SystemAPI.Time.DeltaTime);
             playerController.PlayerController.transform.position = playerAspect.PlayerTransform.ValueRO.Position;
         }).WithoutBurst().Run();
     }
 
-    float3 GetPlayerInput()
+    bool GetPlayerInput(out float3 inputVector)
     {
-        if (Application.isMobilePlatform)
-            return GetTouchInput();
+        inputVector = float3.zero;
 
-        return GetKeyboardInput();
+        if (Application.isMobilePlatform)
+            return TryGetTouchInput(out inputVector);
+
+        return TryGetKeyboardInput(out inputVector);
     }
 
-    float3 GetKeyboardInput()
+    bool TryGetKeyboardInput(out float3 inputVector)
     {
-        float3 inputVector = Convert.ToInt32(Input.GetKey(KeyCode.LeftArrow)) * Vector3.left
+        inputVector = float3.zero;
+        bool IsMoving = Input.GetKey(KeyCode.LeftArrow)
+                        || Input.GetKey(KeyCode.UpArrow)
+                        || Input.GetKey(KeyCode.RightArrow)
+                        || Input.GetKey(KeyCode.DownArrow);
+
+        if (!IsMoving)
+            return false;
+
+        inputVector = Convert.ToInt32(Input.GetKey(KeyCode.LeftArrow)) * Vector3.left
                             + Convert.ToInt32(Input.GetKey(KeyCode.UpArrow)) * Vector3.up
                             + Convert.ToInt32(Input.GetKey(KeyCode.RightArrow)) * Vector3.right
                             + Convert.ToInt32(Input.GetKey(KeyCode.DownArrow)) * Vector3.down;
 
-        return inputVector;
+        return true;
     }
 
-    float3 GetTouchInput()
+    bool TryGetTouchInput(out float3 inputVector)
     {
+        inputVector = float3.zero;
+
         if (Input.touchCount <= 0)
-            return float3.zero;
+            return false;
 
         Vector2 touchPosition = Input.touches[0].position;
         Vector2 deltaPosition = touchPosition - _screenCenterPos;
@@ -60,7 +83,7 @@ public partial class PlayerMovementSyncEntitySystem : SystemBase
         movementVector.x = deltaPosition.x;
         movementVector.y = deltaPosition.y;
 
-        movementVector = math.normalizesafe(movementVector);
-        return movementVector;
+        inputVector = math.normalizesafe(movementVector);
+        return true;
     }
 }

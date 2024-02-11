@@ -77,6 +77,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea0a37249c192554787b9432ec587bd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _skeletonAnimation: {fileID: 3110732503833818733}
 --- !u!1 &6843180978443777217
 GameObject:
   m_ObjectHideFlags: 0
@@ -87,8 +88,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7855111762430223026}
   - component: {fileID: 7724773303100033213}
-  - component: {fileID: 4491523704292618872}
-  - component: {fileID: 8799764322961310681}
+  - component: {fileID: 3110732503833818733}
+  - component: {fileID: 9055932706931105513}
   m_Layer: 0
   m_Name: Spine
   m_TagString: Untagged
@@ -153,7 +154,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4491523704292618872
+--- !u!114 &3110732503833818733
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -162,7 +163,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6843180978443777217}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e075b9a3e08e2f74fbd651c858ab16ed, type: 3}
+  m_Script: {fileID: 11500000, guid: d247ba06193faa74d9335f5481b2b56c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   skeletonDataAsset: {fileID: 11400000, guid: b02e43c2d9a46a74ab4908620c9828ae, type: 2}
@@ -188,7 +189,10 @@ MonoBehaviour:
     materialsInsideMask: []
     materialsOutsideMask: []
   disableRenderingOnOverride: 1
---- !u!33 &8799764322961310681
+  _animationName: idle
+  loop: 1
+  timeScale: 1
+--- !u!33 &9055932706931105513
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
