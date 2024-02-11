@@ -9,17 +9,14 @@ public partial class EnemyMovementToPlayerSystem : SystemBase
 {
     protected override void OnUpdate()
     {
-        UnityEngine.Profiling.Profiler.BeginSample("Physics Test 1");
 
         var playerEntity = GetEntityQuery(typeof(PlayerTagComponent)).GetSingletonEntity();
         float3 playerPosition = SystemAPI.GetComponent<LocalTransform>(playerEntity).Position;
 
-        UnityEngine.Profiling.Profiler.EndSample();
 
         float deltaTime = SystemAPI.Time.DeltaTime;
         float enemySpeed = 2f;
 
-        UnityEngine.Profiling.Profiler.BeginSample("Physics Test 2");
 
         Entities.WithAll<EnemyTagComponent>().ForEach((Entity entity, ref LocalTransform localTransform, ref PhysicsVelocity physicsVelocity, ref PhysicsMass physicsMass) =>
         {
@@ -34,8 +31,6 @@ public partial class EnemyMovementToPlayerSystem : SystemBase
             physicsMass.InverseInertia = float3.zero;
 
         }).WithBurst().ScheduleParallel();
-
-        UnityEngine.Profiling.Profiler.EndSample();
 
         return;
     }

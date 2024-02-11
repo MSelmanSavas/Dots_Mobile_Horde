@@ -25,6 +25,7 @@ public class EnemySpawnerSystemConfigAuthoring : MonoBehaviour
             var entity = GetEntity(TransformUsageFlags.None);
             var buffer = AddBuffer<EnemySpawnerDataComponent>(entity).Reinterpret<EnemySpawnerDataComponent>();
 
+
             for (int i = 0; i < authoring.EnemySpawnerDatas.Count; i++)
             {
                 var prefabEntity = GetEntity(authoring.EnemySpawnerDatas[i].Prefab, TransformUsageFlags.Dynamic);
@@ -32,6 +33,7 @@ public class EnemySpawnerSystemConfigAuthoring : MonoBehaviour
                 buffer.Add(new EnemySpawnerDataComponent
                 {
                     Prefab = prefabEntity,
+                    EntitySpawnerDataIndex = i,
                     CurrentAmountSpawned = authoring.EnemySpawnerDatas[i].CurrentAmountSpawned,
                     MaxAmountSpawned = authoring.EnemySpawnerDatas[i].MaxAmountSpawned,
                 });

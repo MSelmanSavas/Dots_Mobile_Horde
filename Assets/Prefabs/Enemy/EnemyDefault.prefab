@@ -214,6 +214,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7da98856920a2b441b1479ee19673551, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityComponent_Health:
+    CurrentHealth: 0
+    MaxHealth: 15
+    IsDead: 0
 --- !u!1 &9055156373803832888
 GameObject:
   m_ObjectHideFlags: 0

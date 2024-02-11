@@ -5,35 +5,32 @@ using UnityEngine;
 using Unity.Mathematics;
 using Unity.Burst;
 
-[BurstCompile]
-public partial struct EnemyDestroySystem : ISystem
+[UpdateAfter(typeof(EnemySpawnSystem))]
+public partial class EnemyDestroySystem : SystemBase
 {
     EntityCommandBuffer _entityCommandBuffer;
-
     float _maxWaitTime;
     float _currentWaitTime;
     Unity.Mathematics.Random _random;
 
-    [BurstCompile]
-    public void OnCreate(ref SystemState systemState)
+
+    protected override void OnCreate()
     {
         _random = new Unity.Mathematics.Random(10000);
-        _maxWaitTime = 1f;
+        _maxWaitTime = 3f;
         _currentWaitTime = _maxWaitTime;
+        //systemState.RequireForUpdate<EnemySpawnSystem>();
     }
 
-    [BurstCompile]
-    public void OnUpdate(ref SystemState systemState)
+    protected override void OnUpdate()
     {
-        return;
-        
         if (!TryCheckCooldown(SystemAPI.Time.DeltaTime))
             return;
 
-        EntityCommandBuffer.ParallelWriter entityCommandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(systemState.WorldUnmanaged).AsParallelWriter();
+        DynamicBuffer<EnemySpawnerDataComponent> enemySpawnDatas = SystemAPI.GetSingletonBuffer<EnemySpawnerDataComponent>();
+        EntityCommandBuffer entityCommandBuffer = World.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
 
-        //int randomAmount = _random.NextInt(0, 100);
-        int randomAmount = 20;
+        int randomAmount = _random.NextInt(0, 180);
         int currentAmount = 0;
 
         foreach (var (enemyTagComponent, enemyEntity) in SystemAPI.Query<EnemyTagComponent>().WithEntityAccess())
@@ -41,7 +38,13 @@ public partial struct EnemyDestroySystem : ISystem
             if (currentAmount >= randomAmount)
                 return;
 
-            entityCommandBuffer.DestroyEntity(enemyEntity.Index, enemyEntity);
+            int enemySpawnIndex = enemyTagComponent.EnemySpawnerDataIndex;
+
+            var spawnData = enemySpawnDatas[enemySpawnIndex];
+            spawnData.CurrentAmountSpawned -= 1;
+            enemySpawnDatas[enemySpawnIndex] = spawnData;
+
+            entityCommandBuffer.DestroyEntity(enemyEntity);
             currentAmount++;
         }
     }
