@@ -6,7 +6,7 @@ using Unity.Physics.Systems;
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 [UpdateAfter(typeof(PhysicsSystemGroup))]
 [BurstCompile]
-public partial struct BulletTriggerSystem : ISystem
+public partial struct RocketTriggerSystem : ISystem
 {
     [BurstCompile]
     public void OnCreate(ref SystemState state)
@@ -18,22 +18,22 @@ public partial struct BulletTriggerSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState systemState)
     {
-        systemState.Dependency = new BulletTriggerJob
+        systemState.Dependency = new RocketTriggerJob
         {
             EnemyGroup = SystemAPI.GetComponentLookup<EnemyTagComponent>(),
             EnemyHealthGroup = SystemAPI.GetComponentLookup<EntityComponent_Health>(),
-            BulletGroup = SystemAPI.GetComponentLookup<BulletTagComponent>(),
+            RocketGroup = SystemAPI.GetComponentLookup<RocketTagComponent>(),
             ECBParallel = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(systemState.WorldUnmanaged).AsParallelWriter(),
         }.Schedule(SystemAPI.GetSingleton<SimulationSingleton>(), systemState.Dependency);
     }
 
 
     [BurstCompile]
-    struct BulletTriggerJob : ITriggerEventsJob
+    struct RocketTriggerJob : ITriggerEventsJob
     {
         public ComponentLookup<EnemyTagComponent> EnemyGroup;
         public ComponentLookup<EntityComponent_Health> EnemyHealthGroup;
-        public ComponentLookup<BulletTagComponent> BulletGroup;
+        public ComponentLookup<RocketTagComponent> RocketGroup;
         public EntityCommandBuffer.ParallelWriter ECBParallel;
 
         public void Execute(TriggerEvent triggerEvent)
@@ -41,25 +41,25 @@ public partial struct BulletTriggerSystem : ISystem
             Entity entityA = triggerEvent.EntityA;
             Entity entityB = triggerEvent.EntityB;
 
-            bool isBodyABullet = BulletGroup.HasComponent(entityA);
-            bool isBodyBBullet = BulletGroup.HasComponent(entityB);
+            bool isBodyARocket = RocketGroup.HasComponent(entityA);
+            bool isBodyBRocket = RocketGroup.HasComponent(entityB);
 
             bool isBodyAEnemy = EnemyGroup.HasComponent(entityA);
             bool isBodyBEnemy = EnemyGroup.HasComponent(entityB);
 
-            if (isBodyABullet && isBodyBBullet)
+            if (isBodyARocket && isBodyBRocket)
                 return;
 
             if (isBodyAEnemy && isBodyBEnemy)
                 return;
 
-            if (!isBodyABullet && !isBodyBBullet)
+            if (!isBodyARocket && !isBodyBRocket)
                 return;
 
             if (!isBodyAEnemy && !isBodyBEnemy)
                 return;
 
-            var bulletEntity = isBodyABullet ? entityA : entityB;
+            var RocketEntity = isBodyARocket ? entityA : entityB;
             var enemyEntity = isBodyAEnemy ? entityA : entityB;
 
             var enemyHealthComponent = EnemyHealthGroup[enemyEntity];
@@ -67,7 +67,7 @@ public partial struct BulletTriggerSystem : ISystem
             enemyHealthComponent.ChangeHealth(-50);
             EnemyHealthGroup[enemyEntity] = enemyHealthComponent;
 
-            ECBParallel.DestroyEntity(bulletEntity.Index, bulletEntity);
+            ECBParallel.DestroyEntity(RocketEntity.Index, RocketEntity);
         }
     }
 }
