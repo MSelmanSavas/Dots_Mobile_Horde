@@ -9,6 +9,11 @@ public class BulletAuthoring : MonoBehaviour
         {
             Entity bulletEntity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(bulletEntity, new BulletTagComponent { });
+            AddComponent(bulletEntity, new ProjectileSelfDestructComponent
+            {
+                PassedTime = 0f,
+                TimeToLive = 10f,
+            });
         }
     }
 }

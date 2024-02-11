@@ -19,7 +19,7 @@ public partial struct LavaTriggerSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState systemState)
     {
-        systemState.Dependency = new Job
+        systemState.Dependency = new LavaTriggerJob
         {
             EnemyGroup = SystemAPI.GetComponentLookup<EnemyTagComponent>(),
             EnemyHealthGroup = SystemAPI.GetComponentLookup<EntityComponent_Health>(),
@@ -29,7 +29,7 @@ public partial struct LavaTriggerSystem : ISystem
     }
 
     [BurstCompile]
-    struct Job : ITriggerEventsJob
+    struct LavaTriggerJob : ITriggerEventsJob
     {
         public ComponentLookup<EnemyTagComponent> EnemyGroup;
         public ComponentLookup<EntityComponent_Health> EnemyHealthGroup;

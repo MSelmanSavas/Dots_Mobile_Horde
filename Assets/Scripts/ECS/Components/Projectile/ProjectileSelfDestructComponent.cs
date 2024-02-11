@@ -5,5 +5,6 @@ using UnityEngine;
 
 public struct ProjectileSelfDestructComponent : IComponentData
 {
+    public float PassedTime;
     public float TimeToLive;
 }

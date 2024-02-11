@@ -9,6 +9,11 @@ public class RocketAuthoring : MonoBehaviour
         {
             Entity rocketEntity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(rocketEntity, new RocketTagComponent { });
+            AddComponent(rocketEntity, new ProjectileSelfDestructComponent
+            {
+                PassedTime = 0f,
+                TimeToLive = 10f,
+            });
         }
     }
 }

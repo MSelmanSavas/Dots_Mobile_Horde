@@ -51,7 +51,7 @@ public partial struct RocketSpawnSystem : ISystem
 
         entityCommandBuffer.SetComponent(createdEntity, new PhysicsVelocity
         {
-            Linear = normalized * 2f,
+            Linear = normalized * 5f,
             Angular = 0f,
         });
 

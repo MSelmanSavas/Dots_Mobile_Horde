@@ -11,6 +11,11 @@ public class LavaAuthoring : MonoBehaviour
         {
             Entity lavaEntity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(lavaEntity, new LavaTagComponent { });
+            AddComponent(lavaEntity, new ProjectileSelfDestructComponent
+            {
+                PassedTime = 0f,
+                TimeToLive = 4f,
+            });
         }
     }
 }

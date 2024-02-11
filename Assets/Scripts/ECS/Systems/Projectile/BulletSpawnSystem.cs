@@ -52,7 +52,7 @@ public partial struct BulletSpawnSystem : ISystem
 
         entityCommandBuffer.SetComponent(createdEntity, new PhysicsVelocity
         {
-            Linear = normalized * 2f,
+            Linear = normalized * 10f,
             Angular = 0f,
         });
     }

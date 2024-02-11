@@ -24,7 +24,6 @@ public partial class PlayerMovementSyncEntitySystem : SystemBase
         Entities.WithAll<PlayerAspect>().ForEach((PlayerAspect playerAspect, PlayerControllerComponent playerController) =>
         {
             float3 inputVector = GetPlayerInput();
-
             playerAspect.PlayerTransform.ValueRW.Position = playerAspect.PlayerTransform.ValueRW.Position + (playerAspect.PlayerMovementConfig.ValueRO.Speed * inputVector * SystemAPI.Time.DeltaTime);
             playerController.PlayerController.transform.position = playerAspect.PlayerTransform.ValueRO.Position;
         }).WithoutBurst().Run();
