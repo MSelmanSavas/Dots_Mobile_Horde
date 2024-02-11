@@ -7,8 +7,8 @@ public class RocketAuthoring : MonoBehaviour
     {
         public override void Bake(RocketAuthoring authoring)
         {
-            Entity bulletEntity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(bulletEntity, new RocketTagComponent { });
+            Entity rocketEntity = GetEntity(TransformUsageFlags.Dynamic);
+            AddComponent(rocketEntity, new RocketTagComponent { });
         }
     }
 }

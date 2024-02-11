@@ -31,7 +31,7 @@ public partial class EnemySpawnSystem : SystemBase
 
             var createdEntity = _entityCommandBuffer.Instantiate(data.Prefab);
 
-            float3 randomPosition = UnityEngine.Random.insideUnitSphere.normalized * 15;
+            float3 randomPosition = UnityEngine.Random.insideUnitSphere.normalized * 30;
             randomPosition.z = 0;
 
             randomPosition += playerAspect.PlayerTransform.ValueRO.Position;
