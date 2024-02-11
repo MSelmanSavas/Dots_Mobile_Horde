@@ -46,3 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bulletPrefab: {fileID: 1839986426013252320, guid: 5f3e770442e1c2343a133afcd9633576, type: 3}
   _rocketPrefab: {fileID: 2754701798193958125, guid: a7392497b1692ab48b171e7f211d3b9b, type: 3}
+  _lavaPrefab: {fileID: 2118215117141689274, guid: e63f652f4105e58459945958c6e673cd, type: 3}
