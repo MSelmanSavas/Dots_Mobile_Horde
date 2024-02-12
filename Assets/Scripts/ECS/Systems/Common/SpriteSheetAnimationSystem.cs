@@ -6,7 +6,6 @@ using Unity.Transforms;
 using UnityEngine;
 
 [BurstCompile]
-[UpdateInGroup(typeof(LateSimulationSystemGroup))]
 public partial struct SpriteSheetAnimationSystem : ISystem
 {
     [BurstCompile]

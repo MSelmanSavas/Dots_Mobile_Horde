@@ -9,6 +9,7 @@ using Unity.Collections;
 using System.Linq;
 
 
+[CreateAfter(typeof(PlayerMovementSyncEntitySystem))]
 [UpdateAfter(typeof(PlayerMovementSyncEntitySystem))]
 public partial class EnemySpawnSystem : SystemBase
 {
@@ -19,6 +20,9 @@ public partial class EnemySpawnSystem : SystemBase
 
     RenderMeshDescription _renderMeshDescription;
     RenderMeshArray _renderMeshArray;
+
+    bool isInitialized = false;
+
     protected override void OnCreate()
     {
         base.OnCreate();
@@ -30,11 +34,18 @@ public partial class EnemySpawnSystem : SystemBase
     {
         base.OnStartRunning();
 
+        isInitialized = TryGetAllDatas();
+    }
+
+    bool TryGetAllDatas()
+    {
+        base.OnStartRunning();
+
         if (!SystemAPI.TryGetSingletonBuffer(out _enemyDatas))
-            return;
+            return false;
 
         if (!SystemAPI.ManagedAPI.TryGetSingleton(out EnemySpawnerRenderMeshesAndMaterialsComponent enemySpawnerRenderMeshes))
-            return;
+            return false;
 
         _renderMeshArray = RenderMeshArray.CreateWithDeduplication(enemySpawnerRenderMeshes.Materials, enemySpawnerRenderMeshes.Meshes);
 
@@ -73,11 +84,20 @@ public partial class EnemySpawnSystem : SystemBase
 
         entities.Dispose();
         materialMeshInfos.Dispose();
+
+        return true;
     }
 
 
     protected override void OnUpdate()
     {
+        if (!isInitialized)
+        {
+            isInitialized = TryGetAllDatas();
+            if (!isInitialized)
+                return;
+        }
+        
         if (!TryCheckCooldown(SystemAPI.Time.DeltaTime))
             return;
 
