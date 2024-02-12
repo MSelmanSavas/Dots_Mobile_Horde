@@ -1,5 +1,6 @@
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Rendering;
 
 [System.Serializable]
 public struct EntityComponent_Health : IComponentData

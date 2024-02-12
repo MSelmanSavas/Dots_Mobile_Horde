@@ -289,7 +289,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemySpawnerSystemConfigAuthoring
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7881422482950745899, guid: e43c343576b973d469fe29a6afff11f6, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -298,6 +299,6 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 5736662596034484550}
   - {fileID: 7140762424457970677}
+  - {fileID: 5736662596034484550}
   - {fileID: 6112913907550457167}

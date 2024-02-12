@@ -2,6 +2,11 @@ using UnityEngine;
 using Unity.Entities;
 using Unity.Transforms;
 using Unity.Mathematics;
+using Unity.Rendering;
+using System.Collections.Generic;
+using UnityEngine.Rendering;
+using Unity.Collections;
+using System.Linq;
 
 
 [UpdateAfter(typeof(PlayerMovementSyncEntitySystem))]
@@ -12,12 +17,61 @@ public partial class EnemySpawnSystem : SystemBase
     float _currentWaitTime;
     float _maxWaitTime;
 
+    List<Material> _materials = new();
+    List<Mesh> _meshes = new();
+    RenderMeshDescription _renderMeshDescription;
+    RenderMeshArray _renderMeshArray;
     protected override void OnCreate()
     {
         base.OnCreate();
         _maxWaitTime = 0.25f;
         _currentWaitTime = _maxWaitTime;
     }
+
+    protected override void OnStartRunning()
+    {
+        base.OnStartRunning();
+        _materials.Clear();
+        _meshes.Clear();
+
+        var enemySpawnerConfigInstance = EnemySpawnerSystemConfigAuthoring.Instance;
+
+        foreach (var enemySpawnData in enemySpawnerConfigInstance.EnemySpawnerDatas)
+        {
+            _materials.Add(enemySpawnData.EnemyMaterial);
+            _meshes.Add(enemySpawnData.EnemyMesh);
+        }
+
+        _renderMeshDescription = new RenderMeshDescription(
+                   shadowCastingMode: ShadowCastingMode.Off,
+                   receiveShadows: false);
+
+        _renderMeshArray = new RenderMeshArray(_materials.ToArray(), _meshes.ToArray());
+
+        if (!SystemAPI.TryGetSingletonBuffer(out _enemyDatas))
+            return;
+
+        NativeList<Entity> entities = new NativeList<Entity>(Allocator.Temp);
+
+        for (int i = 0; i < _enemyDatas.Length; i++)
+        {
+            var data = _enemyDatas[i];
+
+            entities.Add(data.Prefab);
+        }
+
+        for (int i = 0; i < entities.Length; i++)
+        {
+            var entity = entities[i];
+
+            EntityManager.AddComponent<MaterialMeshInfo>(entity);
+            EntityManager.SetComponentData(entity, MaterialMeshInfo.FromRenderMeshArrayIndices(i, i));
+            EntityManager.AddSharedComponentManaged(entity, _renderMeshArray);
+        }
+
+        entities.Dispose();
+    }
+
 
     protected override void OnUpdate()
     {
@@ -60,6 +114,8 @@ public partial class EnemySpawnSystem : SystemBase
             {
                 EnemySpawnerDataIndex = data.EntitySpawnerDataIndex,
             });
+
+            //_entityCommandBuffer.SetComponent(createdEntity, MaterialMeshInfo.FromRenderMeshArrayIndices(data.EntitySpawnerDataIndex, data.EntitySpawnerDataIndex));
 
             data.CurrentAmountSpawned = data.CurrentAmountSpawned + 1;
 

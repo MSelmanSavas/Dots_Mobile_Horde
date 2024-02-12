@@ -1,5 +1,7 @@
 using Unity.Entities;
+using Unity.Rendering;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class EnemyAuthoring : MonoBehaviour
 {
