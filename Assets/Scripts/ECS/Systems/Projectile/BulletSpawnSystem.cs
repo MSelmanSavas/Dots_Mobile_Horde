@@ -11,13 +11,15 @@ public partial struct BulletSpawnSystem : ISystem
     Unity.Mathematics.Random _random;
     float _currentWaitTime;
     float _maxWaitTime;
+    float3 _lastCachedPlayerMovementDirection;
 
     [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
         _random = new Unity.Mathematics.Random(15000);
-        _maxWaitTime = 2f;
+        _maxWaitTime = 0.25f;
         _currentWaitTime = _maxWaitTime;
+        _lastCachedPlayerMovementDirection = float3.zero;
     }
 
     [BurstCompile]
@@ -33,20 +35,30 @@ public partial struct BulletSpawnSystem : ISystem
             return;
 
         var playerLocalTransform = state.EntityManager.GetComponentData<LocalTransform>(playerEntity);
+        var playerMovementComponent = state.EntityManager.GetComponentData<PlayerMovementComponent>(playerEntity);
 
         EntityCommandBuffer entityCommandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
 
-        float3 randomLinear = _random.NextFloat3Direction();
-        randomLinear.z = 0;
-        float3 normalized = math.normalizesafe(randomLinear);
+        if (playerMovementComponent.IsMoving)
+            _lastCachedPlayerMovementDirection = playerMovementComponent.MovementVector;
 
+        if (math.length(_lastCachedPlayerMovementDirection) == 0f)
+        {
+            float3 randomLinear = _random.NextFloat3Direction();
+            randomLinear.z = 0;
+            _lastCachedPlayerMovementDirection = randomLinear;
+        }
+
+        float3 normalized = math.normalizesafe(_lastCachedPlayerMovementDirection);
+
+        float angle = Vector3.SignedAngle(Vector3.right, normalized, Vector3.forward);
 
         var createdEntity = entityCommandBuffer.Instantiate(bulletSpawnDataComponent.Prefab);
 
         entityCommandBuffer.SetComponent(createdEntity, new LocalTransform
         {
             Position = playerLocalTransform.Position,
-            Rotation = Quaternion.identity,
+            Rotation = Quaternion.Euler(new float3(0f, 0f, angle)),
             Scale = 1f,
         });
 
@@ -67,5 +79,10 @@ public partial struct BulletSpawnSystem : ISystem
 
         _currentWaitTime = _maxWaitTime;
         return true;
+    }
+
+    void GetPlayerMovementDirection()
+    {
+
     }
 }

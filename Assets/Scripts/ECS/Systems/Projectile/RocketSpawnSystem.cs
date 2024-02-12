@@ -35,17 +35,19 @@ public partial struct RocketSpawnSystem : ISystem
         var playerLocalTransform = state.EntityManager.GetComponentData<LocalTransform>(playerEntity);
 
         EntityCommandBuffer entityCommandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
-
+        
         float3 randomLinear = _random.NextFloat3Direction();
         randomLinear.z = 0;
         float3 normalized = math.normalizesafe(randomLinear);
+
+        float angle = Vector3.SignedAngle(Vector3.right, normalized, Vector3.forward);
 
         var createdEntity = entityCommandBuffer.Instantiate(rocketSpawnDataComponent.Prefab);
 
         entityCommandBuffer.SetComponent(createdEntity, new LocalTransform
         {
             Position = playerLocalTransform.Position,
-            Rotation = Quaternion.identity,
+            Rotation = Quaternion.Euler(new float3(0f, 0f, angle)),
             Scale = 1f,
         });
 

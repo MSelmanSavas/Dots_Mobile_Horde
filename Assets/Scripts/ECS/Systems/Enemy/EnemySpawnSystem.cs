@@ -11,6 +11,7 @@ using System.Linq;
 
 [CreateAfter(typeof(PlayerMovementSyncEntitySystem))]
 [UpdateAfter(typeof(PlayerMovementSyncEntitySystem))]
+[RequireMatchingQueriesForUpdate]
 public partial class EnemySpawnSystem : SystemBase
 {
     EntityCommandBuffer _entityCommandBuffer;
@@ -28,6 +29,8 @@ public partial class EnemySpawnSystem : SystemBase
         base.OnCreate();
         _maxWaitTime = 0f;
         _currentWaitTime = _maxWaitTime;
+        //RequireForUpdate<DynamicBuffer<EnemySpawnerDataComponent>>();
+        //RequireForUpdate<EnemySpawnerRenderMeshesAndMaterialsComponent>();
     }
 
     protected override void OnStartRunning()
@@ -97,7 +100,7 @@ public partial class EnemySpawnSystem : SystemBase
             if (!isInitialized)
                 return;
         }
-        
+
         if (!TryCheckCooldown(SystemAPI.Time.DeltaTime))
             return;
 
