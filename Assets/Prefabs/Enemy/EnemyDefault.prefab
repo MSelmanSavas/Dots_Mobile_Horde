@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 2626585931477008536}
   - component: {fileID: 1529985812355163799}
   - component: {fileID: 8262501688482179822}
+  - component: {fileID: -7699742865733287621}
   m_Layer: 0
   m_Name: EnemyDefault
   m_TagString: Untagged
@@ -186,6 +187,28 @@ MonoBehaviour:
     CurrentHealth: 0
     MaxHealth: 15
     IsDead: 0
+--- !u!114 &-7699742865733287621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3727623857469886736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46b6c567f2dcaa440b2f8568fd2eb5dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteSheetAnimationComponent:
+    CurrentFrame: 0
+    FrameCount: 4
+    FrameTimer: 0
+    FrameTimerMax: 0.1
+    UV:
+      x: 0
+      y: 0
+      z: 0
+      w: 0
 --- !u!1 &7203886002669168756
 GameObject:
   m_ObjectHideFlags: 0
