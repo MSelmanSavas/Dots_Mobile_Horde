@@ -9,7 +9,7 @@ Shader "Custom/InstancedFinalShader"
     SubShader
     {
         Tags {"Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" }
-        Cull Back
+        Cull Off
         ZWrite On
         Blend One OneMinusSrcAlpha 
  

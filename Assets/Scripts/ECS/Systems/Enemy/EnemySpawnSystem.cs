@@ -22,7 +22,7 @@ public partial class EnemySpawnSystem : SystemBase
     protected override void OnCreate()
     {
         base.OnCreate();
-        _maxWaitTime = 0.25f;
+        _maxWaitTime = 0f;
         _currentWaitTime = _maxWaitTime;
     }
 
@@ -36,7 +36,18 @@ public partial class EnemySpawnSystem : SystemBase
         if (!SystemAPI.ManagedAPI.TryGetSingleton(out EnemySpawnerRenderMeshesAndMaterialsComponent enemySpawnerRenderMeshes))
             return;
 
-        _renderMeshArray = RenderMeshArray.CreateWithDeduplication(enemySpawnerRenderMeshes.Materials, enemySpawnerRenderMeshes.Meshes); ;
+        _renderMeshArray = RenderMeshArray.CreateWithDeduplication(enemySpawnerRenderMeshes.Materials, enemySpawnerRenderMeshes.Meshes);
+
+        NativeHashMap<int2, SharedMaterialMeshInfoComponent> materialMeshInfos = new NativeHashMap<int2, SharedMaterialMeshInfoComponent>(20, Allocator.Temp);
+
+        for (int i = 0; i < _renderMeshArray.Materials.Length; i++)
+            for (int j = 0; j < _renderMeshArray.Meshes.Length; j++)
+            {
+                materialMeshInfos.Add(new int2(i, j), new SharedMaterialMeshInfoComponent
+                {
+                    Info = MaterialMeshInfo.FromRenderMeshArrayIndices(i, j),
+                });
+            }
 
         NativeList<Entity> entities = new NativeList<Entity>(Allocator.Temp);
 
@@ -55,11 +66,13 @@ public partial class EnemySpawnSystem : SystemBase
             int meshIndex = System.Array.IndexOf(_renderMeshArray.Meshes, enemySpawnerRenderMeshes.Meshes[i]);
 
             EntityManager.AddComponent<MaterialMeshInfo>(entity);
-            EntityManager.SetComponentData(entity, MaterialMeshInfo.FromRenderMeshArrayIndices(materialIndex, meshIndex));
+            //EntityManager.SetComponentData(entity, MaterialMeshInfo.FromRenderMeshArrayIndices(materialIndex, meshIndex));
+            EntityManager.AddSharedComponent(entity, materialMeshInfos[new int2(materialIndex, meshIndex)]);
             EntityManager.AddSharedComponentManaged(entity, _renderMeshArray);
         }
 
         entities.Dispose();
+        materialMeshInfos.Dispose();
     }
 
 
