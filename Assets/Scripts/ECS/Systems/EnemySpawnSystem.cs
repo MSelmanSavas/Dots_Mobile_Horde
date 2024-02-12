@@ -17,8 +17,6 @@ public partial class EnemySpawnSystem : SystemBase
     float _currentWaitTime;
     float _maxWaitTime;
 
-    List<Material> _materials = new();
-    List<Mesh> _meshes = new();
     RenderMeshDescription _renderMeshDescription;
     RenderMeshArray _renderMeshArray;
     protected override void OnCreate()
@@ -31,25 +29,14 @@ public partial class EnemySpawnSystem : SystemBase
     protected override void OnStartRunning()
     {
         base.OnStartRunning();
-        _materials.Clear();
-        _meshes.Clear();
-
-        var enemySpawnerConfigInstance = EnemySpawnerSystemConfigAuthoring.Instance;
-
-        foreach (var enemySpawnData in enemySpawnerConfigInstance.EnemySpawnerDatas)
-        {
-            _materials.Add(enemySpawnData.EnemyMaterial);
-            _meshes.Add(enemySpawnData.EnemyMesh);
-        }
-
-        _renderMeshDescription = new RenderMeshDescription(
-                   shadowCastingMode: ShadowCastingMode.Off,
-                   receiveShadows: false);
-
-        _renderMeshArray = new RenderMeshArray(_materials.ToArray(), _meshes.ToArray());
 
         if (!SystemAPI.TryGetSingletonBuffer(out _enemyDatas))
             return;
+
+        if (!SystemAPI.ManagedAPI.TryGetSingleton(out EnemySpawnerRenderMeshesAndMaterialsComponent enemySpawnerRenderMeshes))
+            return;
+
+        _renderMeshArray = RenderMeshArray.CreateWithDeduplication(enemySpawnerRenderMeshes.Materials, enemySpawnerRenderMeshes.Meshes); ;
 
         NativeList<Entity> entities = new NativeList<Entity>(Allocator.Temp);
 
@@ -64,8 +51,11 @@ public partial class EnemySpawnSystem : SystemBase
         {
             var entity = entities[i];
 
+            int materialIndex = System.Array.IndexOf(_renderMeshArray.Materials, enemySpawnerRenderMeshes.Materials[i]);
+            int meshIndex = System.Array.IndexOf(_renderMeshArray.Meshes, enemySpawnerRenderMeshes.Meshes[i]);
+
             EntityManager.AddComponent<MaterialMeshInfo>(entity);
-            EntityManager.SetComponentData(entity, MaterialMeshInfo.FromRenderMeshArrayIndices(i, i));
+            EntityManager.SetComponentData(entity, MaterialMeshInfo.FromRenderMeshArrayIndices(materialIndex, meshIndex));
             EntityManager.AddSharedComponentManaged(entity, _renderMeshArray);
         }
 

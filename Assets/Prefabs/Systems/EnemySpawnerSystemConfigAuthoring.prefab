@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 5693210226673118449}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.74215317, y: 0.34183058, z: -10.0586}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -47,11 +47,11 @@ MonoBehaviour:
   EnemySpawnerDatas:
   - Prefab: {fileID: 3727623857469886736, guid: fc10b7c9ed4e69846a91c5b1954881cd, type: 3}
     EnemyMesh: {fileID: 0}
-    EnemyMaterial: {fileID: 2100000, guid: dbd15f052b098f94eae567292f67957b, type: 2}
+    EnemyMaterial: {fileID: 2100000, guid: f7d865e731e115a4ba4cd97fdc6df0b9, type: 2}
     CurrentAmountSpawned: 0
     MaxAmountSpawned: 250
   - Prefab: {fileID: 3727623857469886736, guid: dcb4447a3e963a641af4555e99692ae6, type: 3}
     EnemyMesh: {fileID: 0}
-    EnemyMaterial: {fileID: 2100000, guid: dbd15f052b098f94eae567292f67957b, type: 2}
+    EnemyMaterial: {fileID: 2100000, guid: 7e3d7472db3a86642b11425e1f1490c5, type: 2}
     CurrentAmountSpawned: 0
     MaxAmountSpawned: 250

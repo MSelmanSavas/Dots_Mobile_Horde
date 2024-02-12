@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Entities.Serialization;
@@ -23,7 +24,7 @@ public class EnemySpawnerSystemConfigAuthoring : MonoBehaviour
         }
     }
 
-    Mesh CreateQuadMesh(float width, float height)
+    public static Mesh CreateQuadMesh(float width, float height)
     {
         Mesh mesh = new Mesh();
 
@@ -69,7 +70,28 @@ public class EnemySpawnerSystemConfigAuthoring : MonoBehaviour
         return mesh;
     }
 
+    [Sirenix.OdinInspector.Button]
+    void ForceSetSameMeshToDatas()
+    {
+        Mesh mesh = CreateQuadMesh(2f, 2f);
+
+        foreach (var data in EnemySpawnerDatas)
+        {
+            data.EnemyMesh = mesh;
+        }
+    }
+
     public List<EnemySpawnerDataGameobject> EnemySpawnerDatas = new();
+
+    List<Mesh> GetMeshes()
+    {
+        return EnemySpawnerDatas.Select(x => x.EnemyMesh).ToList();
+    }
+
+    List<Material> GetMaterials()
+    {
+        return EnemySpawnerDatas.Select(x => x.EnemyMaterial).ToList();
+    }
 
     [System.Serializable]
     public class EnemySpawnerDataGameobject
@@ -85,8 +107,16 @@ public class EnemySpawnerSystemConfigAuthoring : MonoBehaviour
     {
         public override void Bake(EnemySpawnerSystemConfigAuthoring authoring)
         {
+            authoring.ForceSetSameMeshToDatas();
+            
             var entity = GetEntity(TransformUsageFlags.None);
-            var buffer = AddBuffer<EnemySpawnerDataComponent>(entity).Reinterpret<EnemySpawnerDataComponent>();
+            var buffer = AddBuffer<EnemySpawnerDataComponent>(entity);
+
+            AddComponentObject(entity, new EnemySpawnerRenderMeshesAndMaterialsComponent
+            {
+                Meshes = authoring.GetMeshes(),
+                Materials = authoring.GetMaterials(),
+            });
 
             for (int i = 0; i < authoring.EnemySpawnerDatas.Count; i++)
             {
