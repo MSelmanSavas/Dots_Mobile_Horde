@@ -41,10 +41,8 @@ public partial class PlayerMovementSyncEntitySystem : SystemBase
 
     bool GetPlayerInput(out float3 inputVector)
     {
-        inputVector = float3.zero;
-
-        if (Application.isMobilePlatform)
-            return TryGetTouchInput(out inputVector);
+        if (TryGetTouchInput(out inputVector))
+            return true;
 
         return TryGetKeyboardInput(out inputVector);
     }
@@ -72,10 +70,23 @@ public partial class PlayerMovementSyncEntitySystem : SystemBase
     {
         inputVector = float3.zero;
 
-        if (Input.touchCount <= 0)
-            return false;
+        Vector2 touchPosition = Vector2.zero;
 
-        Vector2 touchPosition = Input.touches[0].position;
+        if (Application.isEditor)
+        {
+            if (!Input.GetKey(KeyCode.Mouse0))
+                return false;
+
+            touchPosition = Input.mousePosition;
+        }
+        else
+        {
+            if (Input.touchCount <= 0)
+                return false;
+
+            touchPosition = Input.touches[0].position;
+        }
+
         Vector2 deltaPosition = touchPosition - _screenCenterPos;
         float3 movementVector = new float3();
 
