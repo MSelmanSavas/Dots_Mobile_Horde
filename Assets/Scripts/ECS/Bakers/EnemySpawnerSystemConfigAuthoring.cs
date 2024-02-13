@@ -38,6 +38,16 @@ public class EnemySpawnerSystemConfigAuthoring : MonoBehaviour
         }
     }
 
+    [Sirenix.OdinInspector.Button]
+    void ForceSetMeshesToDatas(float2 pivot)
+    {
+        foreach (var data in EnemySpawnerDatas)
+        {
+            Mesh mesh = MeshUtils.CreateQuadMesh(data.MeshSize, pivot);
+            data.EnemyMesh = mesh;
+        }
+    }
+
     public List<EnemySpawnerDataGameobject> EnemySpawnerDatas = new();
 
     List<Mesh> GetMeshes()
@@ -55,6 +65,7 @@ public class EnemySpawnerSystemConfigAuthoring : MonoBehaviour
     {
         public GameObject Prefab;
         public Mesh EnemyMesh;
+        public Vector2 MeshSize;
         public Material EnemyMaterial;
         public int CurrentAmountSpawned;
         public int MaxAmountSpawned;
@@ -64,7 +75,7 @@ public class EnemySpawnerSystemConfigAuthoring : MonoBehaviour
     {
         public override void Bake(EnemySpawnerSystemConfigAuthoring authoring)
         {
-            authoring.ForceSetSameMeshToDatas(new float2(2), new float2(0.5));
+            authoring.ForceSetMeshesToDatas(new float2(0.5));
 
             var entity = GetEntity(TransformUsageFlags.None);
             var buffer = AddBuffer<EnemySpawnerDataComponent>(entity);
