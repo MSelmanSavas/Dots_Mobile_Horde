@@ -21,6 +21,9 @@ public class ProjectilesConfigsAuthoring : MonoBehaviour
 
     [SerializeField]
     ProjectileSpawnCooldownComponent _bulletSpawnCooldown;
+
+    [SerializeField]
+    int _bulletSpawnCount;
     #endregion
 
     #region Rocket Variables
@@ -36,6 +39,9 @@ public class ProjectilesConfigsAuthoring : MonoBehaviour
 
     [SerializeField]
     ProjectileSpawnCooldownComponent _rocketSpawnCooldown;
+
+    [SerializeField]
+    int _rocketSpawnCount;
     #endregion
 
     #region Lava Variables
@@ -68,12 +74,14 @@ public class ProjectilesConfigsAuthoring : MonoBehaviour
             {
                 Prefab = bulletEntityPrefab,
                 SpawnCooldown = authoring._bulletSpawnCooldown,
+                SpawnCount = authoring._bulletSpawnCount,
             });
 
             AddComponent(entity, new RocketSpawnDataComponent
             {
                 Prefab = rocketEntityPrefab,
                 SpawnCooldown = authoring._rocketSpawnCooldown,
+                SpawnCount = authoring._rocketSpawnCount,
             });
 
             AddComponent(entity, new LavaSpawnDataComponent
