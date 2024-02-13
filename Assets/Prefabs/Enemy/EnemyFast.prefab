@@ -235,7 +235,7 @@ MonoBehaviour:
   _enemyAttackData:
     DamageAmount: 15
     AttackCooldown:
-      CurrentCooldown: 1
+      CurrentCooldown: 0
       MaxCooldown: 1
   _enemySpeedData:
     Speed: 0.9

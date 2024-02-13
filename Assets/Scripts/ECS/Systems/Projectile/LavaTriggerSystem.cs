@@ -68,7 +68,7 @@ public partial struct LavaTriggerSystem : ISystem
 
             var lavaAreaDamageComponent = LavaAreaDamageGroup[lavaEntity];
 
-            if (lavaAreaDamageComponent.CurrentCooldown >= 0f)
+            if (lavaAreaDamageComponent.CurrentCooldown > 0f)
             {
                 lavaAreaDamageComponent.CurrentCooldown -= TimeDelta;
                 LavaAreaDamageGroup[lavaEntity] = lavaAreaDamageComponent;

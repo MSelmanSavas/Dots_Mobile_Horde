@@ -73,7 +73,6 @@ public partial struct BulletTriggerSystem : ISystem
                 EnemyHealthGroup[enemyEntity] = enemyHealthComponent;
             }
 
-
             ECBParallel.DestroyEntity(bulletEntity.Index, bulletEntity);
         }
     }

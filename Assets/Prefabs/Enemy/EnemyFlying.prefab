@@ -230,8 +230,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityComponent_Health:
     CurrentHealth: 0
-    MaxHealth: 0
+    MaxHealth: 20
     IsDead: 0
+  _enemyAttackData:
+    DamageAmount: 5
+    AttackCooldown:
+      CurrentCooldown: 0
+      MaxCooldown: 1
+  _enemySpeedData:
+    Speed: 1.5
 --- !u!114 &-9180118458052651496
 MonoBehaviour:
   m_ObjectHideFlags: 0
