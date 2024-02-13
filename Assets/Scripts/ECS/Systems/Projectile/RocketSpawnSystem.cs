@@ -23,10 +23,10 @@ public partial struct RocketSpawnSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        if (!TryCheckCooldown(SystemAPI.Time.DeltaTime))
+        if (!SystemAPI.TryGetSingletonRW(out RefRW<RocketSpawnDataComponent> rocketSpawnDataComponent))
             return;
 
-        if (!SystemAPI.TryGetSingleton(out RocketSpawnDataComponent rocketSpawnDataComponent))
+        if (!TryCheckCooldown(ref rocketSpawnDataComponent.ValueRW.SpawnCooldown, SystemAPI.Time.DeltaTime))
             return;
 
         if (!SystemAPI.TryGetSingletonEntity<PlayerTagComponent>(out Entity playerEntity))
@@ -35,14 +35,14 @@ public partial struct RocketSpawnSystem : ISystem
         var playerLocalTransform = state.EntityManager.GetComponentData<LocalTransform>(playerEntity);
 
         EntityCommandBuffer entityCommandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
-        
+
         float3 randomLinear = _random.NextFloat3Direction();
         randomLinear.z = 0;
         float3 normalized = math.normalizesafe(randomLinear);
 
         float angle = Vector3.SignedAngle(Vector3.right, normalized, Vector3.forward);
 
-        var createdEntity = entityCommandBuffer.Instantiate(rocketSpawnDataComponent.Prefab);
+        var createdEntity = entityCommandBuffer.Instantiate(rocketSpawnDataComponent.ValueRO.Prefab);
 
         entityCommandBuffer.SetComponent(createdEntity, new LocalTransform
         {
@@ -59,15 +59,16 @@ public partial struct RocketSpawnSystem : ISystem
 
     }
 
-    bool TryCheckCooldown(float deltaTime)
+    [BurstCompile]
+    bool TryCheckCooldown(ref ProjectileSpawnCooldownComponent cooldown, float deltaTime)
     {
-        if (_currentWaitTime > 0f)
+        if (cooldown.CurrentCooldown > 0f)
         {
-            _currentWaitTime -= deltaTime;
+            cooldown.CurrentCooldown -= deltaTime;
             return false;
         }
 
-        _currentWaitTime = _maxWaitTime;
+        cooldown.CurrentCooldown = cooldown.MaximumCooldown;
         return true;
     }
 }

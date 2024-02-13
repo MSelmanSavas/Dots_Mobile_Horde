@@ -8,6 +8,8 @@ using UnityEngine;
 
 public class ProjectilesConfigsAuthoring : MonoBehaviour
 {
+    #region Bullet Variables
+    [Header("Bullet Datas")]
     [SerializeField]
     GameObject _bulletPrefab;
 
@@ -18,6 +20,12 @@ public class ProjectilesConfigsAuthoring : MonoBehaviour
     Material _bulletMaterial;
 
     [SerializeField]
+    ProjectileSpawnCooldownComponent _bulletSpawnCooldown;
+    #endregion
+
+    #region Rocket Variables
+    [Header("Rocket Datas")]
+    [SerializeField]
     GameObject _rocketPrefab;
 
     [SerializeField]
@@ -27,6 +35,12 @@ public class ProjectilesConfigsAuthoring : MonoBehaviour
     Material _rocketMaterial;
 
     [SerializeField]
+    ProjectileSpawnCooldownComponent _rocketSpawnCooldown;
+    #endregion
+
+    #region Lava Variables
+    [Header("Lava Datas")]
+    [SerializeField]
     GameObject _lavaPrefab;
 
     [SerializeField]
@@ -34,6 +48,7 @@ public class ProjectilesConfigsAuthoring : MonoBehaviour
 
     [SerializeField]
     Vector2 _lavaMeshSize;
+    #endregion
 
     class Baker : Baker<ProjectilesConfigsAuthoring>
     {
@@ -52,11 +67,13 @@ public class ProjectilesConfigsAuthoring : MonoBehaviour
             AddComponent(entity, new BulletSpawnDataComponent
             {
                 Prefab = bulletEntityPrefab,
+                SpawnCooldown = authoring._bulletSpawnCooldown,
             });
 
             AddComponent(entity, new RocketSpawnDataComponent
             {
                 Prefab = rocketEntityPrefab,
+                SpawnCooldown = authoring._rocketSpawnCooldown,
             });
 
             AddComponent(entity, new LavaSpawnDataComponent

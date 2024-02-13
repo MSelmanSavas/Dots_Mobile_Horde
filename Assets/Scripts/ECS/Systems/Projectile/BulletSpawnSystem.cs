@@ -26,7 +26,7 @@ public partial struct BulletSpawnSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        if (!SystemAPI.TryGetSingleton(out BulletSpawnDataComponent bulletSpawnDataComponent))
+        if (!SystemAPI.TryGetSingletonRW(out RefRW<BulletSpawnDataComponent> bulletSpawnDataComponent))
             return;
 
         if (!SystemAPI.TryGetSingletonEntity<PlayerTagComponent>(out Entity playerEntity))
@@ -38,7 +38,8 @@ public partial struct BulletSpawnSystem : ISystem
         if (playerMovementComponent.IsMoving)
             _lastCachedPlayerMovementDirection = playerMovementComponent.MovementVector;
 
-        if (!TryCheckCooldown(SystemAPI.Time.DeltaTime))
+
+        if (!TryCheckCooldown(ref bulletSpawnDataComponent.ValueRW.SpawnCooldown, SystemAPI.Time.DeltaTime))
             return;
 
         EntityCommandBuffer entityCommandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
@@ -54,7 +55,7 @@ public partial struct BulletSpawnSystem : ISystem
 
         float angle = Vector3.SignedAngle(Vector3.right, normalized, Vector3.forward);
 
-        var createdEntity = entityCommandBuffer.Instantiate(bulletSpawnDataComponent.Prefab);
+        var createdEntity = entityCommandBuffer.Instantiate(bulletSpawnDataComponent.ValueRO.Prefab);
 
         entityCommandBuffer.SetComponent(createdEntity, new LocalTransform
         {
@@ -70,20 +71,16 @@ public partial struct BulletSpawnSystem : ISystem
         });
     }
 
-    bool TryCheckCooldown(float deltaTime)
+    [BurstCompile]
+    bool TryCheckCooldown(ref ProjectileSpawnCooldownComponent cooldown, float deltaTime)
     {
-        if (_currentWaitTime > 0f)
+        if (cooldown.CurrentCooldown > 0f)
         {
-            _currentWaitTime -= deltaTime;
+            cooldown.CurrentCooldown -= deltaTime;
             return false;
         }
 
-        _currentWaitTime = _maxWaitTime;
+        cooldown.CurrentCooldown = cooldown.MaximumCooldown;
         return true;
-    }
-
-    void GetPlayerMovementDirection()
-    {
-
     }
 }

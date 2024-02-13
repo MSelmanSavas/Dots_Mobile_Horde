@@ -105,10 +105,4 @@ public partial class SpriteSheetRendererSystem : SystemBase
             }
         }
     }
-
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-        materialMeshInfos.Dispose();
-    }
 }

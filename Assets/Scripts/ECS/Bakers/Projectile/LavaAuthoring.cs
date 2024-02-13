@@ -14,7 +14,7 @@ public class LavaAuthoring : MonoBehaviour
             AddComponent(lavaEntity, new ProjectileSelfDestructComponent
             {
                 PassedTime = 0f,
-                TimeToLive = 4f,
+                TimeToLive = 2f,
             });
         }
     }

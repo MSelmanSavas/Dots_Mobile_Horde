@@ -4,5 +4,5 @@ using Unity.Entities.Serialization;
 public struct BulletSpawnDataComponent : IComponentData
 {
     public Entity Prefab;
-    public EntityPrefabReference PrefabReference;
+    public ProjectileSpawnCooldownComponent SpawnCooldown;
 }
