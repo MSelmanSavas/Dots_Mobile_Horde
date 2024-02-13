@@ -19,7 +19,7 @@ public partial struct SpriteSheetAnimationSystem : ISystem
         var spriteSheetDataQuery = SystemAPI.QueryBuilder()
                    .WithAll<SpriteSheetAnimationComponent, LocalTransform>().Build();
 
-        job.ScheduleParallel(spriteSheetDataQuery, systemState.Dependency).Complete();
+        systemState.Dependency = job.ScheduleParallel(spriteSheetDataQuery, systemState.Dependency);
     }
 
     [BurstCompile]
