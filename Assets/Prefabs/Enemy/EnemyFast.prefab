@@ -232,6 +232,13 @@ MonoBehaviour:
     CurrentHealth: 0
     MaxHealth: 50
     IsDead: 0
+  _enemyAttackData:
+    DamageAmount: 15
+    AttackCooldown:
+      CurrentCooldown: 1
+      MaxCooldown: 1
+  _enemySpeedData:
+    Speed: 0.9
 --- !u!114 &-2688086915601605729
 MonoBehaviour:
   m_ObjectHideFlags: 0

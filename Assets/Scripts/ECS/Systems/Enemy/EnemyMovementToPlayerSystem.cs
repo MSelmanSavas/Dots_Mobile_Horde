@@ -23,38 +23,36 @@ public partial class EnemyMovementToPlayerSystem : SystemBase
         float3 playerPosition = EntityManager.GetComponentData<LocalTransform>(playerEntity).Position;
 
         float deltaTime = SystemAPI.Time.DeltaTime;
-        float enemySpeed = 2f;
 
         if (_applyImpulse)
         {
-            Entities.WithAll<EnemyTagComponent>().ForEach((ref LocalTransform localTransform, ref PhysicsVelocity physicsVelocity, ref PhysicsMass physicsMass) =>
-             {
-                 float3 enemyPosition = localTransform.Position;
-                 float3 enemyToPlayerVector = playerPosition - enemyPosition;
-                 physicsVelocity.ApplyLinearImpulse(physicsMass, enemyToPlayerVector * enemySpeed * deltaTime);
-                 Vector3 linearVelocity = physicsVelocity.Linear;
-                 float velocityScale = linearVelocity.magnitude;
-                 float clampedVelocityMagnitude = Mathf.Clamp(velocityScale, 0f, 10f);
-                 physicsVelocity.Linear = linearVelocity.normalized * clampedVelocityMagnitude;
-                 physicsVelocity.Angular = 0f;
-                 physicsMass.InverseInertia = float3.zero;
+            Entities.WithAll<EnemyTagComponent>().ForEach((ref PhysicsVelocity physicsVelocity, ref PhysicsMass physicsMass, in LocalTransform localTransform, in EnemySpeedComponent enemySpeed) =>
+            {
+                float3 enemyPosition = localTransform.Position;
+                float3 enemyToPlayerVector = playerPosition - enemyPosition;
+                physicsVelocity.ApplyLinearImpulse(physicsMass, enemyToPlayerVector * enemySpeed.Speed * deltaTime);
+                Vector3 linearVelocity = physicsVelocity.Linear;
+                float velocityScale = linearVelocity.magnitude;
+                float clampedVelocityMagnitude = Mathf.Clamp(velocityScale, 0f, 10f);
+                physicsVelocity.Linear = linearVelocity.normalized * clampedVelocityMagnitude;
+                physicsVelocity.Angular = 0f;
+                physicsMass.InverseInertia = float3.zero;
 
-             }).WithBurst().ScheduleParallel();
+            }).WithBurst().ScheduleParallel();
         }
         else
         {
-            Entities.WithAll<EnemyTagComponent>().ForEach((ref LocalTransform localTransform, ref PhysicsVelocity physicsVelocity, ref PhysicsMass physicsMass) =>
+            Entities.WithAll<EnemyTagComponent>().ForEach((ref PhysicsVelocity physicsVelocity, ref PhysicsMass physicsMass, in LocalTransform localTransform, in EnemySpeedComponent enemySpeed) =>
              {
                  float3 enemyPosition = localTransform.Position;
                  float3 enemyToPlayerVector = playerPosition - enemyPosition;
                  float3 directionVector = math.normalizesafe(enemyToPlayerVector);
-                 physicsVelocity.Linear = directionVector * enemySpeed;
+                 physicsVelocity.Linear = directionVector * enemySpeed.Speed;
                  physicsVelocity.Angular = 0f;
                  physicsMass.InverseInertia = float3.zero;
 
              }).WithBurst().ScheduleParallel();
         }
-
 
         return;
     }
