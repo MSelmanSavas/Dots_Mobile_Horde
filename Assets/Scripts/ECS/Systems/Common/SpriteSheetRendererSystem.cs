@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
@@ -60,25 +61,27 @@ public partial class SpriteSheetRendererSystem : SystemBase
                 entityQuery.AddSharedComponentFilterManaged(renderMeshArray);
                 entityQuery.AddSharedComponentFilter(materialMeshInfo);
 
-                NativeArray<SpriteSheetAnimationComponent> animationComponents = entityQuery.ToComponentDataArray<SpriteSheetAnimationComponent>(Allocator.Temp);
+                int entityCount = entityQuery.CalculateEntityCount();
 
-                if (animationComponents.Length <= 0)
-                {
-                    animationComponents.Dispose();
+                if (entityCount <= 0)
                     continue;
-                }
+
+                NativeArray<SpriteSheetAnimationComponent> animationComponents = entityQuery.ToComponentDataArray<SpriteSheetAnimationComponent>(Allocator.TempJob);
 
                 lastFoundMesh = renderMeshArray.GetMesh(materialMeshInfo.Info);
                 lastFoundMaterial = renderMeshArray.GetMaterial(materialMeshInfo.Info);
 
-                NativeArray<Matrix4x4> matrixArray = new NativeArray<Matrix4x4>(animationComponents.Length, Allocator.Temp);
-                NativeArray<Vector4> uvArray = new NativeArray<Vector4>(animationComponents.Length, Allocator.Temp);
+                NativeArray<Matrix4x4> matrixArray = new NativeArray<Matrix4x4>(animationComponents.Length, Allocator.TempJob);
+                NativeArray<Vector4> uvArray = new NativeArray<Vector4>(animationComponents.Length, Allocator.TempJob);
 
-                for (int i = 0; i < animationComponents.Length; i++)
+                JobHandle parallelWriteJobHandle = new FillArraysParallelJob
                 {
-                    matrixArray[i] = animationComponents[i].Matrix;
-                    uvArray[i] = animationComponents[i].UV;
-                }
+                    nativeArray = animationComponents.AsReadOnly(),
+                    matrixArray = matrixArray,
+                    uvArray = uvArray,
+                }.Schedule(animationComponents.Length, 10);
+
+                parallelWriteJobHandle.Complete();
 
                 for (int i = 0; i < animationComponents.Length; i += sliceCount)
                 {
@@ -103,6 +106,21 @@ public partial class SpriteSheetRendererSystem : SystemBase
                 uvArray.Dispose();
                 animationComponents.Dispose();
             }
+        }
+    }
+
+    [BurstCompile]
+    private struct FillArraysParallelJob : IJobParallelFor
+    {
+        public NativeArray<SpriteSheetAnimationComponent>.ReadOnly nativeArray;
+        public NativeArray<Matrix4x4> matrixArray;
+        public NativeArray<Vector4> uvArray;
+
+        public void Execute(int index)
+        {
+            SpriteSheetAnimationComponent entityPositionWithIndex = nativeArray[index];
+            matrixArray[index] = entityPositionWithIndex.Matrix;
+            uvArray[index] = entityPositionWithIndex.UV;
         }
     }
 }
