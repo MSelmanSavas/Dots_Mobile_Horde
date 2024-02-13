@@ -26,13 +26,7 @@ public partial struct BulletSpawnSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        if (!TryCheckCooldown(SystemAPI.Time.DeltaTime))
-            return;
-
         if (!SystemAPI.TryGetSingleton(out BulletSpawnDataComponent bulletSpawnDataComponent))
-            return;
-
-        if (!SystemAPI.ManagedAPI.TryGetSingleton(out ProjectilesRenderDatasSharedComponent projectilesRenderDatas))
             return;
 
         if (!SystemAPI.TryGetSingletonEntity<PlayerTagComponent>(out Entity playerEntity))
@@ -41,10 +35,13 @@ public partial struct BulletSpawnSystem : ISystem
         var playerLocalTransform = state.EntityManager.GetComponentData<LocalTransform>(playerEntity);
         var playerMovementComponent = state.EntityManager.GetComponentData<PlayerMovementComponent>(playerEntity);
 
-        EntityCommandBuffer entityCommandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
-
         if (playerMovementComponent.IsMoving)
             _lastCachedPlayerMovementDirection = playerMovementComponent.MovementVector;
+
+        if (!TryCheckCooldown(SystemAPI.Time.DeltaTime))
+            return;
+
+        EntityCommandBuffer entityCommandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
 
         if (math.length(_lastCachedPlayerMovementDirection) == 0f)
         {

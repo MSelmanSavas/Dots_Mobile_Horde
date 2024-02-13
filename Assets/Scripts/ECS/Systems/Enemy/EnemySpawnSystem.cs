@@ -19,11 +19,6 @@ public partial class EnemySpawnSystem : SystemBase
     float _currentWaitTime;
     float _maxWaitTime;
 
-    RenderMeshDescription _renderMeshDescription;
-    RenderMeshArray _renderMeshArray;
-
-    bool isInitialized = false;
-
     protected override void OnCreate()
     {
         base.OnCreate();
@@ -31,73 +26,8 @@ public partial class EnemySpawnSystem : SystemBase
         _currentWaitTime = _maxWaitTime;
     }
 
-    protected override void OnStartRunning()
-    {
-        base.OnStartRunning();
-
-        isInitialized = TryGetAllDatas();
-    }
-
-    bool TryGetAllDatas()
-    {
-        base.OnStartRunning();
-
-        if (!SystemAPI.TryGetSingletonBuffer(out _enemyDatas))
-            return false;
-
-        if (!SystemAPI.ManagedAPI.TryGetSingleton(out EnemySpawnerRenderMeshesAndMaterialsComponent enemySpawnerRenderMeshes))
-            return false;
-
-        _renderMeshArray = RenderMeshArray.CreateWithDeduplication(enemySpawnerRenderMeshes.Materials, enemySpawnerRenderMeshes.Meshes);
-
-        NativeHashMap<int2, SharedMaterialMeshInfoComponent> materialMeshInfos = new NativeHashMap<int2, SharedMaterialMeshInfoComponent>(20, Allocator.Temp);
-
-        for (int i = 0; i < _renderMeshArray.Materials.Length; i++)
-            for (int j = 0; j < _renderMeshArray.Meshes.Length; j++)
-            {
-                materialMeshInfos.Add(new int2(i, j), new SharedMaterialMeshInfoComponent
-                {
-                    Id = 0,
-                    Info = MaterialMeshInfo.FromRenderMeshArrayIndices(i, j),
-                });
-            }
-
-        NativeList<Entity> entities = new NativeList<Entity>(Allocator.Temp);
-
-        for (int i = 0; i < _enemyDatas.Length; i++)
-        {
-            var data = _enemyDatas[i];
-
-            entities.Add(data.Prefab);
-        }
-
-        for (int i = 0; i < entities.Length; i++)
-        {
-            var entity = entities[i];
-
-            int materialIndex = System.Array.IndexOf(_renderMeshArray.Materials, enemySpawnerRenderMeshes.Materials[i]);
-            int meshIndex = System.Array.IndexOf(_renderMeshArray.Meshes, enemySpawnerRenderMeshes.Meshes[i]);
-
-            EntityManager.AddSharedComponent(entity, materialMeshInfos[new int2(materialIndex, meshIndex)]);
-            EntityManager.AddSharedComponentManaged(entity, _renderMeshArray);
-        }
-
-        entities.Dispose();
-        materialMeshInfos.Dispose();
-
-        return true;
-    }
-
-
     protected override void OnUpdate()
     {
-        if (!isInitialized)
-        {
-            isInitialized = TryGetAllDatas();
-            if (!isInitialized)
-                return;
-        }
-
         if (!TryCheckCooldown(SystemAPI.Time.DeltaTime))
             return;
 

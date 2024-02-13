@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Rendering;
-using UnityEngine;
 
 [WorldSystemFilter(WorldSystemFilterFlags.BakingSystem)]
 public partial class ProjectileConfigBakingSystem : SystemBase
