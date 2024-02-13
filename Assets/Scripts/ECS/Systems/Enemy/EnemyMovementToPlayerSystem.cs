@@ -17,12 +17,13 @@ public partial class EnemyMovementToPlayerSystem : SystemBase
 
     protected override void OnUpdate()
     {
-        var playerEntity = GetEntityQuery(typeof(PlayerTagComponent)).GetSingletonEntity();
-        float3 playerPosition = SystemAPI.GetComponent<LocalTransform>(playerEntity).Position;
+        if (!SystemAPI.TryGetSingletonEntity<PlayerTagComponent>(out Entity playerEntity))
+            return;
+
+        float3 playerPosition = EntityManager.GetComponentData<LocalTransform>(playerEntity).Position;
 
         float deltaTime = SystemAPI.Time.DeltaTime;
         float enemySpeed = 2f;
-
 
         if (_applyImpulse)
         {

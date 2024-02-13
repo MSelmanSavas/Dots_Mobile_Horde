@@ -29,7 +29,7 @@ public partial struct EnemySpawnSystem : ISystem
 
         PlayerAspect playerAspect = state.EntityManager.GetAspect<PlayerAspect>(playerEntity);
 
-        _entityCommandBuffer = state.World.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
+        _entityCommandBuffer = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged);
 
         for (int i = 0; i < _enemyDatas.Length; i++)
         {
@@ -38,7 +38,7 @@ public partial struct EnemySpawnSystem : ISystem
             if (data.CurrentAmountSpawned >= data.MaxAmountSpawned)
                 continue;
 
-            if (!TryCheckCooldown(ref data, SystemAPI.Time.DeltaTime))
+            if (!TryCheckCooldown(data, SystemAPI.Time.DeltaTime))
             {
                 _enemyDatas[i] = data;
                 continue;
@@ -69,7 +69,7 @@ public partial struct EnemySpawnSystem : ISystem
         }
     }
 
-    bool TryCheckCooldown(ref EnemySpawnerDataComponent enemySpawnerData, float deltaTime)
+    bool TryCheckCooldown(EnemySpawnerDataComponent enemySpawnerData, float deltaTime)
     {
         ref var genericCooldown = ref enemySpawnerData.GenericCooldown;
 

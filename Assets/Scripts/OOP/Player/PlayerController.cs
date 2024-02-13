@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Spine.Unity;
 using Unity.Entities;
+using Unity.Physics;
 using Unity.Transforms;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ public class PlayerController : MonoBehaviour
     bool _wasMoving;
     bool _isMoving;
 
-    private void Awake()
+    private void Start()
     {
         CreateConnectedEntity();
     }
@@ -25,45 +26,22 @@ public class PlayerController : MonoBehaviour
     void CreateConnectedEntity()
     {
         _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        var query = _entityManager.CreateEntityQuery(new ComponentType[] { typeof(PlayerTagComponent) });
 
-        _connectedPlayerEntity = _entityManager.CreateSingleton<PlayerTagComponent>();
+        if (!query.TryGetSingletonEntity<PlayerTagComponent>(out _connectedPlayerEntity))
+            Debug.LogError("Cannot find player entity");
 
-        _entityManager.AddComponent<PlayerTagComponent>(_connectedPlayerEntity);
-        _entityManager.AddComponent<PlayerControllerComponent>(_connectedPlayerEntity);
-        _entityManager.SetComponentData(_connectedPlayerEntity, new PlayerControllerComponent
+        _entityManager.AddComponentObject(_connectedPlayerEntity, new PlayerControllerComponent
         {
             PlayerController = this,
         });
-
-        _entityManager.AddComponent<PlayerMovementConfigComponent>(_connectedPlayerEntity);
-        _entityManager.SetComponentData(_connectedPlayerEntity, new PlayerMovementConfigComponent
-        {
-            Speed = 15,
-        });
-
-        _entityManager.AddComponent<LocalTransform>(_connectedPlayerEntity);
-        _entityManager.AddComponent<LocalToWorld>(_connectedPlayerEntity);
-
-        _entityManager.AddComponent<EntityComponent_Health>(_connectedPlayerEntity);
-        _entityManager.SetComponentData(_connectedPlayerEntity, new EntityComponent_Health
-        {
-            CurrentHealth = 100,
-            MaxHealth = 100,
-            IsDead = false,
-        });
-
-        _entityManager.AddComponent<PlayerMovementComponent>(_connectedPlayerEntity);
-
-
-#if UNITY_EDITOR
-        _entityManager.SetName(_connectedPlayerEntity, "Player");
-#endif
     }
 
     private void LateUpdate()
     {
         CheckMovementStatus();
         SetPlayerDirection();
+
     }
 
     void CheckMovementStatus()
