@@ -25,44 +25,12 @@ public class EnemySpawnerSystemConfigAuthoring : MonoBehaviour
         }
     }
 
-    public static Mesh CreateQuadMesh(float2 size, float2 pivot)
-    {
-        float2 scaledPivot = size * pivot;
 
-        Vector3[] _vertices =
-        {
-            new Vector3(size.x - scaledPivot.x, size.y - scaledPivot.y, 0),
-            new Vector3(size.x - scaledPivot.x, -scaledPivot.y, 0),
-            new Vector3(-scaledPivot.x, -scaledPivot.y, 0),
-            new Vector3(-scaledPivot.x, size.y - scaledPivot.y, 0),
-        };
-
-        Vector2[] _uv =
-        {
-            new Vector2(1, 1),
-            new Vector2(1, 0),
-            new Vector2(0, 0),
-            new Vector2(0, 1)
-        };
-
-        int[] triangles =
-        {
-            0, 1, 2,
-            2, 3, 0
-        };
-
-        return new Mesh
-        {
-            vertices = _vertices,
-            uv = _uv,
-            triangles = triangles
-        };
-    }
 
     [Sirenix.OdinInspector.Button]
     void ForceSetSameMeshToDatas(float2 size, float2 pivot)
     {
-        Mesh mesh = CreateQuadMesh(new float2(size), pivot);
+        Mesh mesh = MeshUtils.CreateQuadMesh(new float2(size), pivot);
 
         foreach (var data in EnemySpawnerDatas)
         {

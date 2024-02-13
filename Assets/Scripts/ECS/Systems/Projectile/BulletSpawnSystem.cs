@@ -4,6 +4,7 @@ using Unity.Transforms;
 using UnityEngine;
 using Unity.Mathematics;
 using Unity.Burst;
+using Unity.Rendering;
 
 [BurstCompile]
 public partial struct BulletSpawnSystem : ISystem
@@ -29,6 +30,9 @@ public partial struct BulletSpawnSystem : ISystem
             return;
 
         if (!SystemAPI.TryGetSingleton(out BulletSpawnDataComponent bulletSpawnDataComponent))
+            return;
+
+        if (!SystemAPI.ManagedAPI.TryGetSingleton(out ProjectilesRenderDatasSharedComponent projectilesRenderDatas))
             return;
 
         if (!SystemAPI.TryGetSingletonEntity<PlayerTagComponent>(out Entity playerEntity))
