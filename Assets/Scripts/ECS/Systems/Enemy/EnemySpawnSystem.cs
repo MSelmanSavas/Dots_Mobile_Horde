@@ -18,7 +18,6 @@ public partial struct EnemySpawnSystem : ISystem
     EntityCommandBuffer _entityCommandBuffer;
     DynamicBuffer<EnemySpawnerDataComponent> _enemyDatas;
 
-    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         if (!SystemAPI.TryGetSingletonBuffer(out _enemyDatas))

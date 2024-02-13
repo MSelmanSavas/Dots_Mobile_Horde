@@ -6,8 +6,10 @@ using Unity.Transforms;
 using UnityEngine;
 
 [BurstCompile]
+[UpdateInGroup(typeof(LateSimulationSystemGroup))]
 public partial struct RotationalLockSystem : ISystem
 {
+    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         var enemies = SystemAPI.QueryBuilder().WithAll<EnemyTagComponent, LocalTransform, PhysicsVelocity>().Build();

@@ -18,7 +18,7 @@ public partial struct ProjectileDestroyAfterLifetimeSystem : ISystem
             DeltaTime = SystemAPI.Time.DeltaTime,
             ECBParallel = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(systemState.WorldUnmanaged).AsParallelWriter(),
         };
-        
+
         systemState.Dependency = checkProjectileLifetimeHandle.ScheduleParallel(checkProjectileLifetimeQuery, systemState.Dependency);
     }
 
