@@ -411,6 +411,13 @@
       },
       "url": "https://packages.unity.com"
     },
+    "net.sanukin.uniplanemeshgenerator": {
+      "version": "https://github.com/sanukin39/UniPlaneMeshGenerator.git?path=/Assets/UniPlaneMeshGenerator#1.0.3",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "7be08e11bd2df88a4a65acf3cf42041bc4fea130"
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,

@@ -74,14 +74,12 @@ public partial class SpriteSheetRendererSystem : SystemBase
                 NativeArray<Matrix4x4> matrixArray = new NativeArray<Matrix4x4>(animationComponents.Length, Allocator.TempJob);
                 NativeArray<Vector4> uvArray = new NativeArray<Vector4>(animationComponents.Length, Allocator.TempJob);
 
-                JobHandle parallelWriteJobHandle = new FillArraysParallelJob
+                new FillArraysParallelJob
                 {
                     nativeArray = animationComponents.AsReadOnly(),
                     matrixArray = matrixArray,
                     uvArray = uvArray,
-                }.Schedule(animationComponents.Length, 10);
-
-                parallelWriteJobHandle.Complete();
+                }.Schedule(animationComponents.Length, 10).Complete();
 
                 for (int i = 0; i < animationComponents.Length; i += sliceCount)
                 {

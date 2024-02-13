@@ -12,7 +12,6 @@ public class PlayerControllerComponent : IComponentData, IDisposable, ICloneable
 
     public void Dispose()
     {
-        if (PlayerController != null)
-            UnityEngine.Object.Destroy(PlayerController.gameObject);
+       
     }
 }

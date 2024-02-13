@@ -77,7 +77,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea0a37249c192554787b9432ec587bd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _generalSubScene: {fileID: 0}
+  _subSceneReference:
+    Id:
+      GlobalId:
+        SceneObjectIdentifier0: 102900000
+        SceneObjectIdentifier1: 0
+        AssetGUID:
+          Value:
+            x: 611231522
+            y: 1222647101
+            z: 3277328789
+            w: 3021545769
+        IdentifierType: 1
+      GenerationType: 4
   _skeletonAnimation: {fileID: 3110732503833818733}
+  _playerHealthText: {fileID: 0}
 --- !u!1 &6843180978443777217
 GameObject:
   m_ObjectHideFlags: 0

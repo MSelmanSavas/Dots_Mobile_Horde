@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Spine.Unity;
 using Unity.Entities;
+using Unity.Entities.Serialization;
 using Unity.Physics;
 using Unity.Scenes;
 using Unity.Transforms;
@@ -19,6 +21,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     SubScene _generalSubScene;
 
+    [Sirenix.OdinInspector.ShowInInspector]
+    Entity _subSceneEntity;
+
+    [SerializeField]
+    EntitySceneReference _subSceneReference;
+
     [SerializeField]
     SkeletonAnimation _skeletonAnimation;
 
@@ -27,15 +35,25 @@ public class PlayerController : MonoBehaviour
 
     bool _wasMoving;
     bool _isMoving;
+    bool _hasGotConnectedEntity;
 
     private IEnumerator Start()
     {
+        _hasGotConnectedEntity = false;
+
+        //_subSceneEntity = SceneSystem.LoadSceneAsync(World.DefaultGameObjectInjectionWorld.Unmanaged, _subSceneReference);
+
+        foreach (var system in World.DefaultGameObjectInjectionWorld.Systems)
+        {
+            system.Enabled = true;
+        }
+
         //Very bad hack to make controller wait entity systems to be loaded.
         yield return new WaitForSeconds(0.25f);
         GetConnectedEntity();
     }
 
-    void GetConnectedEntity()
+    bool GetConnectedEntity()
     {
         _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
@@ -44,19 +62,49 @@ public class PlayerController : MonoBehaviour
         if (!query.TryGetSingletonEntity<PlayerTagComponent>(out _connectedPlayerEntity))
         {
             Debug.LogError("Cannot find player entity");
+            return false;
         }
 
         _entityManager.AddComponentObject(_connectedPlayerEntity, new PlayerControllerComponent
         {
             PlayerController = this,
         });
+
+        return true;
     }
 
     private void LateUpdate()
     {
+        if (!TryGetConnectedEntity())
+            return;
+
         CheckMovementStatus();
         SetPlayerDirection();
         CheckPlayerHealth();
+    }
+
+    private bool TryGetConnectedEntity()
+    {
+        if (_hasGotConnectedEntity)
+            return true;
+
+        try
+        {
+            _hasGotConnectedEntity = GetConnectedEntity();
+
+            if (_hasGotConnectedEntity)
+            {
+                foreach (var system in World.DefaultGameObjectInjectionWorld.Systems)
+                {
+                    system.Enabled = true;
+                }
+            }
+            return _hasGotConnectedEntity;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     void CheckMovementStatus()
@@ -146,8 +194,25 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //Very bad hack for restarting game scene! But i didn't had time to implement a cleaner solution :/
     public void CleanAndRestartECS()
     {
+        var defaultWorld = World.DefaultGameObjectInjectionWorld;
+        defaultWorld.EntityManager.CompleteAllTrackedJobs();
+
+        foreach (var system in defaultWorld.Systems)
+        {
+            system.Enabled = false;
+        }
+
+        // DefaultWorldInitialization.Initialize("Default World", false);
+
+        // if (!ScriptBehaviourUpdateOrder.IsWorldInCurrentPlayerLoop(World.DefaultGameObjectInjectionWorld))
+        // {
+        //     ScriptBehaviourUpdateOrder.AppendWorldToCurrentPlayerLoop(World.DefaultGameObjectInjectionWorld);
+        // }
+
+        SceneSystem.UnloadScene(defaultWorld.Unmanaged, _subSceneEntity, SceneSystem.UnloadParameters.DestroyMetaEntities);
         SceneManager.LoadScene("MainMenuScene", LoadSceneMode.Single);
     }
 }
