@@ -320,6 +320,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4dc2b66198ae5d4cb2de6f757dfc892, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lavaAreaDamageConfig:
+    CurrentCooldown: 0
+    MaxCooldown: 0.5
+    DamageAmount: 5
 --- !u!114 &-895317602791663124
 MonoBehaviour:
   m_ObjectHideFlags: 0

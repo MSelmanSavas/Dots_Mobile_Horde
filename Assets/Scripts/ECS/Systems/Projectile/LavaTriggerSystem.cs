@@ -24,7 +24,9 @@ public partial struct LavaTriggerSystem : ISystem
             EnemyGroup = SystemAPI.GetComponentLookup<EnemyTagComponent>(),
             EnemyHealthGroup = SystemAPI.GetComponentLookup<EntityComponent_Health>(),
             LavaGroup = SystemAPI.GetComponentLookup<LavaTagComponent>(),
+            LavaAreaDamageGroup = SystemAPI.GetComponentLookup<ProjectileAreaDamageComponent>(),
             ECBParallel = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(systemState.WorldUnmanaged).AsParallelWriter(),
+            TimeDelta = SystemAPI.Time.DeltaTime,
         }.Schedule(SystemAPI.GetSingleton<SimulationSingleton>(), systemState.Dependency);
     }
 
@@ -34,7 +36,9 @@ public partial struct LavaTriggerSystem : ISystem
         public ComponentLookup<EnemyTagComponent> EnemyGroup;
         public ComponentLookup<EntityComponent_Health> EnemyHealthGroup;
         public ComponentLookup<LavaTagComponent> LavaGroup;
+        public ComponentLookup<ProjectileAreaDamageComponent> LavaAreaDamageGroup;
         public EntityCommandBuffer.ParallelWriter ECBParallel;
+        public float TimeDelta;
 
         public void Execute(TriggerEvent triggerEvent)
         {
@@ -62,9 +66,21 @@ public partial struct LavaTriggerSystem : ISystem
             var lavaEntity = isBodyALava ? entityA : entityB;
             var enemyEntity = isBodyAEnemy ? entityA : entityB;
 
+            var lavaAreaDamageComponent = LavaAreaDamageGroup[lavaEntity];
+
+            if (lavaAreaDamageComponent.CurrentCooldown >= 0f)
+            {
+                lavaAreaDamageComponent.CurrentCooldown -= TimeDelta;
+                LavaAreaDamageGroup[lavaEntity] = lavaAreaDamageComponent;
+                return;
+            }
+
+            lavaAreaDamageComponent.CurrentCooldown = lavaAreaDamageComponent.MaxCooldown;
+            LavaAreaDamageGroup[lavaEntity] = lavaAreaDamageComponent;
+
             var enemyHealthComponent = EnemyHealthGroup[enemyEntity];
 
-            enemyHealthComponent.ChangeHealth(-50);
+            enemyHealthComponent.ChangeHealth(-lavaAreaDamageComponent.DamageAmount);
             EnemyHealthGroup[enemyEntity] = enemyHealthComponent;
         }
     }

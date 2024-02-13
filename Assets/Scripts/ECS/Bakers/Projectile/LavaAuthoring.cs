@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class LavaAuthoring : MonoBehaviour
 {
+    [SerializeField]
+    ProjectileAreaDamageComponent _lavaAreaDamageConfig;
+
     class Baker : Baker<LavaAuthoring>
     {
         public override void Bake(LavaAuthoring authoring)
@@ -16,6 +19,7 @@ public class LavaAuthoring : MonoBehaviour
                 PassedTime = 0f,
                 TimeToLive = 2f,
             });
+            AddComponent(lavaEntity, authoring._lavaAreaDamageConfig);
         }
     }
 }
