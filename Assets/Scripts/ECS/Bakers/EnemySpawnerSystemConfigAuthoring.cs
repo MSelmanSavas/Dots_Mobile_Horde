@@ -26,7 +26,6 @@ public class EnemySpawnerSystemConfigAuthoring : MonoBehaviour
     }
 
 
-
     [Sirenix.OdinInspector.Button]
     void ForceSetSameMeshToDatas(float2 size, float2 pivot)
     {
@@ -69,6 +68,7 @@ public class EnemySpawnerSystemConfigAuthoring : MonoBehaviour
         public Material EnemyMaterial;
         public int CurrentAmountSpawned;
         public int MaxAmountSpawned;
+        public GenericCooldownComponent CooldownComponent;
     }
 
     class Baker : Baker<EnemySpawnerSystemConfigAuthoring>
@@ -97,6 +97,7 @@ public class EnemySpawnerSystemConfigAuthoring : MonoBehaviour
                     EntitySpawnerDataIndex = i,
                     CurrentAmountSpawned = enemySpawnData.CurrentAmountSpawned,
                     MaxAmountSpawned = enemySpawnData.MaxAmountSpawned,
+                    GenericCooldown = enemySpawnData.CooldownComponent,
                 });
             }
         }

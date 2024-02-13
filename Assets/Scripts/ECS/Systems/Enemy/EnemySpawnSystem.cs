@@ -7,39 +7,29 @@ using System.Collections.Generic;
 using UnityEngine.Rendering;
 using Unity.Collections;
 using System.Linq;
+using Unity.Burst;
 
 
 [CreateAfter(typeof(PlayerMovementSyncEntitySystem))]
 [UpdateAfter(typeof(PlayerMovementSyncEntitySystem))]
 [RequireMatchingQueriesForUpdate]
-public partial class EnemySpawnSystem : SystemBase
+public partial struct EnemySpawnSystem : ISystem
 {
     EntityCommandBuffer _entityCommandBuffer;
     DynamicBuffer<EnemySpawnerDataComponent> _enemyDatas;
-    float _currentWaitTime;
-    float _maxWaitTime;
 
-    protected override void OnCreate()
+    [BurstCompile]
+    public void OnUpdate(ref SystemState state)
     {
-        base.OnCreate();
-        _maxWaitTime = 0.5f;
-        _currentWaitTime = _maxWaitTime;
-    }
-
-    protected override void OnUpdate()
-    {
-        if (!TryCheckCooldown(SystemAPI.Time.DeltaTime))
-            return;
-
         if (!SystemAPI.TryGetSingletonBuffer(out _enemyDatas))
             return;
 
         if (!SystemAPI.TryGetSingletonEntity<PlayerTagComponent>(out Entity playerEntity))
             return;
 
-        PlayerAspect playerAspect = EntityManager.GetAspect<PlayerAspect>(playerEntity);
+        PlayerAspect playerAspect = state.EntityManager.GetAspect<PlayerAspect>(playerEntity);
 
-        _entityCommandBuffer = World.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
+        _entityCommandBuffer = state.World.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
 
         for (int i = 0; i < _enemyDatas.Length; i++)
         {
@@ -47,6 +37,12 @@ public partial class EnemySpawnSystem : SystemBase
 
             if (data.CurrentAmountSpawned >= data.MaxAmountSpawned)
                 continue;
+
+            if (!TryCheckCooldown(ref data, SystemAPI.Time.DeltaTime))
+            {
+                _enemyDatas[i] = data;
+                continue;
+            }
 
             var createdEntity = _entityCommandBuffer.Instantiate(data.Prefab);
 
@@ -68,23 +64,22 @@ public partial class EnemySpawnSystem : SystemBase
                 EnemySpawnerDataIndex = data.EntitySpawnerDataIndex,
             });
 
-            //_entityCommandBuffer.SetComponent(createdEntity, MaterialMeshInfo.FromRenderMeshArrayIndices(data.EntitySpawnerDataIndex, data.EntitySpawnerDataIndex));
-
-            data.CurrentAmountSpawned = data.CurrentAmountSpawned + 1;
-
+            data.CurrentAmountSpawned += 1;
             _enemyDatas[i] = data;
         }
     }
 
-    bool TryCheckCooldown(float deltaTime)
+    bool TryCheckCooldown(ref EnemySpawnerDataComponent enemySpawnerData, float deltaTime)
     {
-        if (_currentWaitTime > 0f)
+        ref var genericCooldown = ref enemySpawnerData.GenericCooldown;
+
+        if (genericCooldown.CurrentCooldown > 0f)
         {
-            _currentWaitTime -= deltaTime;
+            genericCooldown.CurrentCooldown -= deltaTime;
             return false;
         }
 
-        _currentWaitTime = _maxWaitTime;
+        genericCooldown.CurrentCooldown = genericCooldown.MaxCooldown;
         return true;
     }
 }

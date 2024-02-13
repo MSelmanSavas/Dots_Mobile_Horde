@@ -8,4 +8,5 @@ public struct EnemySpawnerDataComponent : IBufferElementData
     public int EntitySpawnerDataIndex;
     public int CurrentAmountSpawned;
     public int MaxAmountSpawned;
+    public GenericCooldownComponent GenericCooldown;
 }
