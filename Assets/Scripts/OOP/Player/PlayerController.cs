@@ -22,33 +22,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     SkeletonAnimation _skeletonAnimation;
 
+    [SerializeField]
+    TMPro.TextMeshProUGUI _playerHealthText;
+
     bool _wasMoving;
     bool _isMoving;
 
-    private async void Awake()
-    {
-        return;
-        var sceneEntity = SceneSystem.GetSceneEntity(World.DefaultGameObjectInjectionWorld.Unmanaged, _generalSubScene.SceneGUID);
-
-        if (sceneEntity == null || !SceneSystem.IsSceneLoaded(World.DefaultGameObjectInjectionWorld.Unmanaged, sceneEntity))
-        {
-            SceneSystem.LoadSceneAsync(World.DefaultGameObjectInjectionWorld.Unmanaged, sceneEntity, new SceneSystem.LoadParameters
-            {
-                Flags = SceneLoadFlags.NewInstance,
-                Priority = 0,
-            });
-
-            while (!SceneSystem.IsSceneLoaded(World.DefaultGameObjectInjectionWorld.Unmanaged, sceneEntity))
-            {
-                await Task.Delay(50);
-            }
-        }
-
-        GetConnectedEntity();
-    }
-
     private IEnumerator Start()
     {
+        //Very bad hack to make controller wait entity systems to be loaded.
         yield return new WaitForSeconds(0.25f);
         GetConnectedEntity();
     }
@@ -151,11 +133,11 @@ public class PlayerController : MonoBehaviour
 
             var playerHealth = _entityManager.GetComponentData<EntityComponent_Health>(_connectedPlayerEntity);
 
+            _playerHealthText.text = playerHealth.CurrentHealth.ToString();
+
             if (!playerHealth.IsDead)
                 return;
 
-            //_entityManager.DestroyEntity(_entityManager.UniversalQuery);
-            //SceneSystem.UnloadScene(World.DefaultGameObjectInjectionWorld.Unmanaged, _generalSubScene.SceneGUID, SceneSystem.UnloadParameters.Default);
             CleanAndRestartECS();
         }
         catch
@@ -166,21 +148,6 @@ public class PlayerController : MonoBehaviour
 
     public void CleanAndRestartECS()
     {
-        // var defaultWorld = World.DefaultGameObjectInjectionWorld;
-        // defaultWorld.EntityManager.CompleteAllTrackedJobs();
-
-        // foreach (var system in defaultWorld.Systems)
-        // {
-        //     system.Enabled = false;
-        // }
-
-        // defaultWorld.Dispose();
-        // DefaultWorldInitialization.Initialize("Default World", false);
-
-        // if (!ScriptBehaviourUpdateOrder.IsWorldInCurrentPlayerLoop(World.DefaultGameObjectInjectionWorld))
-        // {
-        //     ScriptBehaviourUpdateOrder.AppendWorldToCurrentPlayerLoop(World.DefaultGameObjectInjectionWorld);
-        // }
         SceneManager.LoadScene("MainMenuScene", LoadSceneMode.Single);
     }
 }
