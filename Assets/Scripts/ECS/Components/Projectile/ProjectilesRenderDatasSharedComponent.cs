@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class ProjectilesRenderDatasSharedComponent : IComponentData
 {
-    public Dictionary<Entity, MaterialMeshInfo> EntityToMaterialMeshInfoIndex = new();
-    public RenderMeshArray renderMeshArray;
+    public List<Material> Materials;
+    public List<Mesh> Meshes;
+    public RenderMeshArray RenderMeshArray;
 }

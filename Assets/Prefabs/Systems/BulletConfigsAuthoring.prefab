@@ -45,5 +45,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bulletPrefab: {fileID: 1839986426013252320, guid: 5f3e770442e1c2343a133afcd9633576, type: 3}
+  _bulletMeshSize: {x: 1, y: 1}
+  _bulletMaterial: {fileID: 2100000, guid: f08b891e7f9a9ea44ada40c2871e2c2c, type: 2}
   _rocketPrefab: {fileID: 2754701798193958125, guid: a7392497b1692ab48b171e7f211d3b9b, type: 3}
+  _rocketMeshSize: {x: 1, y: 1}
+  _rocketMaterial: {fileID: 2100000, guid: 4c79d1cfe80d0e04987dc75589f783ad, type: 2}
   _lavaPrefab: {fileID: 2118215117141689274, guid: e63f652f4105e58459945958c6e673cd, type: 3}
+  _lavaMaterial: {fileID: 2100000, guid: f892197d350bd6a459ea597a9f3c42c3, type: 2}
+  _lavaMeshSize: {x: 1, y: 1}

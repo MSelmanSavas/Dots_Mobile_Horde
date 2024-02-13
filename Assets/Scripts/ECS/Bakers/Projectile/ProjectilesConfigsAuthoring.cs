@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Rendering;
 using UnityEngine;
 
@@ -63,15 +64,25 @@ public class ProjectilesConfigsAuthoring : MonoBehaviour
                 Prefab = lavaEntityPrefab,
             });
 
-            Dictionary<Entity, MaterialMeshInfo> materialMeshInfos = new();
+            List<Material> materials = new()
+            {
+                authoring._bulletMaterial,
+                authoring._rocketMaterial,
+                authoring._lavaMaterial,
+            };
 
-            materialMeshInfos.Add(bulletEntityPrefab, MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0));
-            materialMeshInfos.Add(rocketEntityPrefab, MaterialMeshInfo.FromRenderMeshArrayIndices(1, 1));
-            materialMeshInfos.Add(lavaEntityPrefab, MaterialMeshInfo.FromRenderMeshArrayIndices(2, 2));
+            List<Mesh> meshes = new()
+            {
+               MeshUtils.CreateQuadMesh(authoring._bulletMeshSize, new float2(0.5f)),
+               MeshUtils.CreateQuadMesh(authoring._rocketMeshSize, new float2(0.5f)),
+               MeshUtils.CreateQuadMesh(authoring._lavaMeshSize, new float2(0.5f)),
+            };
 
             AddComponentObject<ProjectilesRenderDatasSharedComponent>(entity, new ProjectilesRenderDatasSharedComponent
             {
-                EntityToMaterialMeshInfoIndex = materialMeshInfos,
+                Materials = materials,
+                Meshes = meshes,
+                RenderMeshArray = RenderMeshArray.CreateWithDeduplication(materials, meshes),
             });
         }
     }

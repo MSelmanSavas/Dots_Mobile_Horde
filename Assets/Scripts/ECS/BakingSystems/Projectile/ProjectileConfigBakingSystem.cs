@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Rendering;
 using UnityEngine;
 
@@ -21,18 +23,38 @@ public partial class ProjectileConfigBakingSystem : SystemBase
         if (!SystemAPI.ManagedAPI.TryGetSingleton(out ProjectilesRenderDatasSharedComponent projectilesRender))
             return;
 
-        var bulletIdentifier = EntityManager.GetComponentData<ProjectileIdentifierComponent>(bulletSpawnDataComponent.Prefab);
-        var rocketIdentifier = EntityManager.GetComponentData<ProjectileIdentifierComponent>(rocketSpawnDataComponent.Prefab);
-        var lavaIdentifier = EntityManager.GetComponentData<ProjectileIdentifierComponent>(lavaSpawnDataComponent.Prefab);
+        NativeHashMap<int2, SharedMaterialMeshInfoComponent> materialMeshInfos = new NativeHashMap<int2, SharedMaterialMeshInfoComponent>(20, Allocator.Temp);
 
-        Debug.Log(bulletIdentifier.Identifier);
-        Debug.Log(rocketIdentifier.Identifier);
-        Debug.Log(lavaIdentifier.Identifier);
+        for (int i = 0; i < projectilesRender.RenderMeshArray.Materials.Length; i++)
+            for (int j = 0; j < projectilesRender.RenderMeshArray.Meshes.Length; j++)
+            {
+                materialMeshInfos.Add(new int2(i, j), new SharedMaterialMeshInfoComponent
+                {
+                    Info = MaterialMeshInfo.FromRenderMeshArrayIndices(i, j),
+                });
+            }
 
-        projectilesRender.EntityToMaterialMeshInfoIndex.Clear();
+        NativeList<Entity> entities = new NativeList<Entity>(Allocator.Temp)
+        {
+            bulletSpawnDataComponent.Prefab,
+            rocketSpawnDataComponent.Prefab,
+            lavaSpawnDataComponent.Prefab,
+        };
 
-        projectilesRender.EntityToMaterialMeshInfoIndex.Add(bulletSpawnDataComponent.Prefab, MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0));
-        projectilesRender.EntityToMaterialMeshInfoIndex.Add(rocketSpawnDataComponent.Prefab, MaterialMeshInfo.FromRenderMeshArrayIndices(1, 1));
-        projectilesRender.EntityToMaterialMeshInfoIndex.Add(lavaSpawnDataComponent.Prefab, MaterialMeshInfo.FromRenderMeshArrayIndices(2, 2));
+        for (int i = 0; i < entities.Length; i++)
+        {
+            var entity = entities[i];
+
+            int materialIndex = System.Array.IndexOf(projectilesRender.RenderMeshArray.Materials, projectilesRender.Materials[i]);
+            int meshIndex = System.Array.IndexOf(projectilesRender.RenderMeshArray.Meshes, projectilesRender.Meshes[i]);
+
+            EntityManager.AddComponent<MaterialMeshInfo>(entity);
+            EntityManager.AddSharedComponent(entity, materialMeshInfos[new int2(materialIndex, meshIndex)]);
+            EntityManager.AddSharedComponentManaged(entity, projectilesRender.RenderMeshArray);
+        }
+
+        entities.Dispose();
+        materialMeshInfos.Dispose();
+
     }
 }
