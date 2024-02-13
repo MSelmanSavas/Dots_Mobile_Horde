@@ -63,3 +63,12 @@ MonoBehaviour:
     CooldownComponent:
       CurrentCooldown: 0
       MaxCooldown: 1
+  - Prefab: {fileID: 3727623857469886736, guid: 84926243ccd3bdb4bb234b65e65e58be, type: 3}
+    EnemyMesh: {fileID: 0}
+    MeshSize: {x: 2, y: 2}
+    EnemyMaterial: {fileID: 2100000, guid: edb420c1c565c4847bbcd18a49a42a17, type: 2}
+    CurrentAmountSpawned: 0
+    MaxAmountSpawned: 250
+    CooldownComponent:
+      CurrentCooldown: 0
+      MaxCooldown: 0.75

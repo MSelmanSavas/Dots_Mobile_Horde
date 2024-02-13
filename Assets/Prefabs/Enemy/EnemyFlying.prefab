@@ -238,7 +238,7 @@ MonoBehaviour:
       CurrentCooldown: 0
       MaxCooldown: 1
   _enemySpeedData:
-    Speed: 1.5
+    Speed: 2.5
 --- !u!114 &-9180118458052651496
 MonoBehaviour:
   m_ObjectHideFlags: 0
