@@ -9,17 +9,25 @@ public partial class ProjectileConfigBakingSystem : SystemBase
 {
     protected override void OnUpdate()
     {
-        if (!SystemAPI.TryGetSingleton<BulletSpawnDataComponent>(out BulletSpawnDataComponent bulletSpawnDataComponent))
+        if (!SystemAPI.TryGetSingleton(out BulletSpawnDataComponent bulletSpawnDataComponent))
             return;
 
-        if (!SystemAPI.TryGetSingleton<RocketSpawnDataComponent>(out RocketSpawnDataComponent rocketSpawnDataComponent))
+        if (!SystemAPI.TryGetSingleton(out RocketSpawnDataComponent rocketSpawnDataComponent))
             return;
 
-        if (!SystemAPI.TryGetSingleton<LavaSpawnDataComponent>(out LavaSpawnDataComponent lavaSpawnDataComponent))
+        if (!SystemAPI.TryGetSingleton(out LavaSpawnDataComponent lavaSpawnDataComponent))
             return;
 
-        if (!SystemAPI.ManagedAPI.TryGetSingleton<ProjectilesRenderDatasSharedComponent>(out ProjectilesRenderDatasSharedComponent projectilesRender))
+        if (!SystemAPI.ManagedAPI.TryGetSingleton(out ProjectilesRenderDatasSharedComponent projectilesRender))
             return;
+
+        var bulletIdentifier = EntityManager.GetComponentData<ProjectileIdentifierComponent>(bulletSpawnDataComponent.Prefab);
+        var rocketIdentifier = EntityManager.GetComponentData<ProjectileIdentifierComponent>(rocketSpawnDataComponent.Prefab);
+        var lavaIdentifier = EntityManager.GetComponentData<ProjectileIdentifierComponent>(lavaSpawnDataComponent.Prefab);
+
+        Debug.Log(bulletIdentifier.Identifier);
+        Debug.Log(rocketIdentifier.Identifier);
+        Debug.Log(lavaIdentifier.Identifier);
 
         projectilesRender.EntityToMaterialMeshInfoIndex.Clear();
 
