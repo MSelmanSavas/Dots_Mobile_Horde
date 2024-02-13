@@ -38,7 +38,7 @@ public partial struct EnemySpawnSystem : ISystem
             if (data.CurrentAmountSpawned >= data.MaxAmountSpawned)
                 continue;
 
-            if (!TryCheckCooldown(data, SystemAPI.Time.DeltaTime))
+            if (!TryCheckCooldown(ref data, SystemAPI.Time.DeltaTime))
             {
                 _enemyDatas[i] = data;
                 continue;
@@ -69,7 +69,7 @@ public partial struct EnemySpawnSystem : ISystem
         }
     }
 
-    bool TryCheckCooldown(EnemySpawnerDataComponent enemySpawnerData, float deltaTime)
+    bool TryCheckCooldown(ref EnemySpawnerDataComponent enemySpawnerData, float deltaTime)
     {
         ref var genericCooldown = ref enemySpawnerData.GenericCooldown;
 
