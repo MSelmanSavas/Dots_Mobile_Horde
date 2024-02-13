@@ -44,13 +44,21 @@ public partial class SpriteSheetRendererSystem : SystemBase
 
         foreach (var renderMeshArray in renderMeshArrays)
         {
+            if (renderMeshArray == null)
+                continue;
+
             if (renderMeshArray.Meshes == null || renderMeshArray.Materials == null)
                 continue;
 
+
             foreach (var materialMeshInfo in materialMeshInfos)
             {
-                entityQuery.SetSharedComponentFilterManaged(renderMeshArray);
-                entityQuery.SetSharedComponentFilter(materialMeshInfo);
+                if (materialMeshInfo.Info.Mesh == 0 || materialMeshInfo.Info.Material == 0)
+                    continue;
+
+                entityQuery.ResetFilter();
+                entityQuery.AddSharedComponentFilterManaged(renderMeshArray);
+                entityQuery.AddSharedComponentFilter(materialMeshInfo);
 
                 NativeArray<SpriteSheetAnimationComponent> animationComponents = entityQuery.ToComponentDataArray<SpriteSheetAnimationComponent>(Allocator.Temp);
 

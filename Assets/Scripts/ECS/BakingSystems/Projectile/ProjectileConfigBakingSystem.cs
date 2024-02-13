@@ -30,6 +30,7 @@ public partial class ProjectileConfigBakingSystem : SystemBase
             {
                 materialMeshInfos.Add(new int2(i, j), new SharedMaterialMeshInfoComponent
                 {
+                    Id = 1,
                     Info = MaterialMeshInfo.FromRenderMeshArrayIndices(i, j),
                 });
             }
@@ -48,7 +49,6 @@ public partial class ProjectileConfigBakingSystem : SystemBase
             int materialIndex = System.Array.IndexOf(projectilesRender.RenderMeshArray.Materials, projectilesRender.Materials[i]);
             int meshIndex = System.Array.IndexOf(projectilesRender.RenderMeshArray.Meshes, projectilesRender.Meshes[i]);
 
-            EntityManager.AddComponent<MaterialMeshInfo>(entity);
             EntityManager.AddSharedComponent(entity, materialMeshInfos[new int2(materialIndex, meshIndex)]);
             EntityManager.AddSharedComponentManaged(entity, projectilesRender.RenderMeshArray);
         }

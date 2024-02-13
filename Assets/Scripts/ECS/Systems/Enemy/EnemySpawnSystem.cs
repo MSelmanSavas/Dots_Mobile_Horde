@@ -27,7 +27,7 @@ public partial class EnemySpawnSystem : SystemBase
     protected override void OnCreate()
     {
         base.OnCreate();
-        _maxWaitTime = 0f;
+        _maxWaitTime = 0.5f;
         _currentWaitTime = _maxWaitTime;
     }
 
@@ -57,6 +57,7 @@ public partial class EnemySpawnSystem : SystemBase
             {
                 materialMeshInfos.Add(new int2(i, j), new SharedMaterialMeshInfoComponent
                 {
+                    Id = 0,
                     Info = MaterialMeshInfo.FromRenderMeshArrayIndices(i, j),
                 });
             }
@@ -77,7 +78,6 @@ public partial class EnemySpawnSystem : SystemBase
             int materialIndex = System.Array.IndexOf(_renderMeshArray.Materials, enemySpawnerRenderMeshes.Materials[i]);
             int meshIndex = System.Array.IndexOf(_renderMeshArray.Meshes, enemySpawnerRenderMeshes.Meshes[i]);
 
-            EntityManager.AddComponent<MaterialMeshInfo>(entity);
             EntityManager.AddSharedComponent(entity, materialMeshInfos[new int2(materialIndex, meshIndex)]);
             EntityManager.AddSharedComponentManaged(entity, _renderMeshArray);
         }
