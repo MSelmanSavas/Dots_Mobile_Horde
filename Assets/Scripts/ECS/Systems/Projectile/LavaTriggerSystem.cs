@@ -80,7 +80,7 @@ public partial struct LavaTriggerSystem : ISystem
 
             var enemyHealthComponent = EnemyHealthGroup[enemyEntity];
 
-            enemyHealthComponent.ChangeHealth(-lavaAreaDamageComponent.DamageAmount);
+            enemyHealthComponent.ChangeHealth(-lavaAreaDamageComponent.DamageData.DamageAmount);
             EnemyHealthGroup[enemyEntity] = enemyHealthComponent;
         }
     }

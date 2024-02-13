@@ -95,7 +95,7 @@ public class ProjectilesConfigsAuthoring : MonoBehaviour
                MeshUtils.CreateQuadMesh(authoring._lavaMeshSize, new float2(0.5f)),
             };
 
-            AddComponentObject<ProjectilesRenderDatasSharedComponent>(entity, new ProjectilesRenderDatasSharedComponent
+            AddComponentObject(entity, new ProjectilesRenderDatasSharedComponent
             {
                 Materials = materials,
                 Meshes = meshes,

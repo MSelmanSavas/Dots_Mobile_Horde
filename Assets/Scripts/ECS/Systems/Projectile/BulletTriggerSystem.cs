@@ -23,6 +23,7 @@ public partial struct BulletTriggerSystem : ISystem
             EnemyGroup = SystemAPI.GetComponentLookup<EnemyTagComponent>(),
             EnemyHealthGroup = SystemAPI.GetComponentLookup<EntityComponent_Health>(),
             BulletGroup = SystemAPI.GetComponentLookup<BulletTagComponent>(),
+            ProjectileDirectDamageGroup = SystemAPI.GetComponentLookup<ProjectileDirectDamageComponent>(),
             ECBParallel = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(systemState.WorldUnmanaged).AsParallelWriter(),
         }.Schedule(SystemAPI.GetSingleton<SimulationSingleton>(), systemState.Dependency);
     }
@@ -34,6 +35,7 @@ public partial struct BulletTriggerSystem : ISystem
         public ComponentLookup<EnemyTagComponent> EnemyGroup;
         public ComponentLookup<EntityComponent_Health> EnemyHealthGroup;
         public ComponentLookup<BulletTagComponent> BulletGroup;
+        public ComponentLookup<ProjectileDirectDamageComponent> ProjectileDirectDamageGroup;
         public EntityCommandBuffer.ParallelWriter ECBParallel;
 
         public void Execute(TriggerEvent triggerEvent)
@@ -62,10 +64,15 @@ public partial struct BulletTriggerSystem : ISystem
             var bulletEntity = isBodyABullet ? entityA : entityB;
             var enemyEntity = isBodyAEnemy ? entityA : entityB;
 
-            var enemyHealthComponent = EnemyHealthGroup[enemyEntity];
+            if (ProjectileDirectDamageGroup.HasComponent(bulletEntity))
+            {
+                var projectileDamageComponent = ProjectileDirectDamageGroup[bulletEntity];
+                var enemyHealthComponent = EnemyHealthGroup[enemyEntity];
 
-            enemyHealthComponent.ChangeHealth(-50);
-            EnemyHealthGroup[enemyEntity] = enemyHealthComponent;
+                enemyHealthComponent.ChangeHealth(projectileDamageComponent.DamageAmount);
+                EnemyHealthGroup[enemyEntity] = enemyHealthComponent;
+            }
+
 
             ECBParallel.DestroyEntity(bulletEntity.Index, bulletEntity);
         }

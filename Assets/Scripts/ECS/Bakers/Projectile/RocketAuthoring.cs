@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class RocketAuthoring : MonoBehaviour
 {
+    [SerializeField]
+    ProjectileStartSpeedComponent _projectileStartSpeed;
+
     class Baker : Baker<RocketAuthoring>
     {
         public override void Bake(RocketAuthoring authoring)
@@ -14,6 +17,8 @@ public class RocketAuthoring : MonoBehaviour
                 PassedTime = 0f,
                 TimeToLive = 10f,
             });
+
+            AddComponent(rocketEntity, authoring._projectileStartSpeed);
         }
     }
 }

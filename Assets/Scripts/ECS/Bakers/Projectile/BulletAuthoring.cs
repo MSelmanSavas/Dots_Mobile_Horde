@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class BulletAuthoring : MonoBehaviour
 {
+    [SerializeField]
+    ProjectileStartSpeedComponent _projectileStartSpeed;
+
+    [SerializeField]
+    ProjectileDirectDamageComponent _projectileDirectDamage;
 
     class Baker : Baker<BulletAuthoring>
     {
@@ -17,6 +22,9 @@ public class BulletAuthoring : MonoBehaviour
                 PassedTime = 0f,
                 TimeToLive = 10f,
             });
+
+            AddComponent(bulletEntity, authoring._projectileStartSpeed);
+            AddComponent(bulletEntity, authoring._projectileDirectDamage);
         }
     }
 }

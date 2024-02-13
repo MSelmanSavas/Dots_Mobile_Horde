@@ -323,7 +323,8 @@ MonoBehaviour:
   _lavaAreaDamageConfig:
     CurrentCooldown: 0
     MaxCooldown: 0.5
-    DamageAmount: 5
+    DamageData:
+      DamageAmount: 15
 --- !u!114 &-895317602791663124
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5,5 +5,5 @@ public struct ProjectileAreaDamageComponent : IComponentData
 {
     public float CurrentCooldown;
     public float MaxCooldown;
-    public float DamageAmount;
+    public ProjectileDirectDamageComponent DamageData;
 }
