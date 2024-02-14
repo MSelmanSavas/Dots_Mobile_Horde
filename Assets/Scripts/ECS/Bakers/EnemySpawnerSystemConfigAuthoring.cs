@@ -12,20 +12,6 @@ using UnityEngine.Rendering;
 
 public class EnemySpawnerSystemConfigAuthoring : MonoBehaviour
 {
-    public static EnemySpawnerSystemConfigAuthoring Instance;
-
-    private void Awake()
-    {
-        Instance = this;
-
-        for (int i = 0; i < EnemySpawnerDatas.Count; i++)
-        {
-            var data = EnemySpawnerDatas[i];
-            //data.EnemyMesh = CreateQuadMesh(3, 3);
-        }
-    }
-
-
     [Sirenix.OdinInspector.Button]
     void ForceSetSameMeshToDatas(float2 size, float2 pivot)
     {
@@ -75,16 +61,13 @@ public class EnemySpawnerSystemConfigAuthoring : MonoBehaviour
     {
         public override void Bake(EnemySpawnerSystemConfigAuthoring authoring)
         {
-            authoring.ForceSetMeshesToDatas(new float2(0.5));
+            for (int i = 0; i < authoring.EnemySpawnerDatas.Count; i++)
+            {
+                DependsOn(authoring.EnemySpawnerDatas[i].Prefab);
+            }
 
             var entity = GetEntity(TransformUsageFlags.None);
             var buffer = AddBuffer<EnemySpawnerDataComponent>(entity);
-
-            AddComponentObject(entity, new EnemySpawnerRenderMeshesAndMaterialsComponent
-            {
-                Meshes = authoring.GetMeshes(),
-                Materials = authoring.GetMaterials(),
-            });
 
             for (int i = 0; i < authoring.EnemySpawnerDatas.Count; i++)
             {
@@ -100,6 +83,13 @@ public class EnemySpawnerSystemConfigAuthoring : MonoBehaviour
                     GenericCooldown = enemySpawnData.CooldownComponent,
                 });
             }
+
+            AddComponentObject(entity, new EnemySpawnerRenderMeshesAndMaterialsComponent
+            {
+                Meshes = authoring.GetMeshes(),
+                Materials = authoring.GetMaterials(),
+                RenderMeshArray = RenderMeshArray.CreateWithDeduplication(authoring.GetMaterials(), authoring.GetMeshes()),
+            });
         }
     }
 }

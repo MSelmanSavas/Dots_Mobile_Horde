@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnemySpawnerDatas:
   - Prefab: {fileID: 3727623857469886736, guid: fc10b7c9ed4e69846a91c5b1954881cd, type: 3}
-    EnemyMesh: {fileID: 0}
+    EnemyMesh: {fileID: 4300000, guid: 48c293869a8c4c147af07d5091365258, type: 2}
     MeshSize: {x: 2, y: 2}
     EnemyMaterial: {fileID: 2100000, guid: f7d865e731e115a4ba4cd97fdc6df0b9, type: 2}
     CurrentAmountSpawned: 0
@@ -55,7 +55,7 @@ MonoBehaviour:
       CurrentCooldown: 0
       MaxCooldown: 0.35
   - Prefab: {fileID: 3727623857469886736, guid: dcb4447a3e963a641af4555e99692ae6, type: 3}
-    EnemyMesh: {fileID: 0}
+    EnemyMesh: {fileID: 4300000, guid: 6c7d852d5e88b4142bc135a1f91a9860, type: 2}
     MeshSize: {x: 3, y: 2}
     EnemyMaterial: {fileID: 2100000, guid: 7e3d7472db3a86642b11425e1f1490c5, type: 2}
     CurrentAmountSpawned: 0
@@ -64,7 +64,7 @@ MonoBehaviour:
       CurrentCooldown: 0
       MaxCooldown: 1
   - Prefab: {fileID: 3727623857469886736, guid: 84926243ccd3bdb4bb234b65e65e58be, type: 3}
-    EnemyMesh: {fileID: 0}
+    EnemyMesh: {fileID: 4300000, guid: 4047d6917b0e4d34d850e8c28a85c0b8, type: 2}
     MeshSize: {x: 2, y: 2}
     EnemyMaterial: {fileID: 2100000, guid: edb420c1c565c4847bbcd18a49a42a17, type: 2}
     CurrentAmountSpawned: 0
